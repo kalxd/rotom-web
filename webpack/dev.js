@@ -1,3 +1,5 @@
+const path = require("path");
+
 const config = {
 	mode: "development",
 
@@ -7,8 +9,12 @@ const config = {
 		extensions: [".ts", ".js"]
 	},
 
-	output: {
-		filename: "main.js"
+	devtool: "inline-source-map",
+
+	devServer: {
+		static: {
+			directory: path.resolve("assert")
+		}
 	}
 };
 

@@ -1,6 +1,7 @@
 {
 	"compilerOptions": {
 		"strict": true,
+		"lib": ["dom"],
 		"outDir": "./dist"
 	}
 }

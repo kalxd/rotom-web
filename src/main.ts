@@ -1,11 +1,16 @@
-import * as m from "mithril";
+import { mount } from "drifloon";
+import * as m from "drifloon/m";
+
+const App: m.Component = {
+	view() {
+		return m("div", [
+			m("h1", "hello")
+		]);
+	}
+};
 
 const main = () => {
-	const appNode = document.getElementById("app");
-
-	if (appNode) {
-		m.render(appNode, null);
-	}
+	mount(App);
 };
 
 main();

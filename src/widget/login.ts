@@ -9,6 +9,11 @@ interface FormField {
 	password: string,
 }
 
+const makeFormField = (username: string, password: string): FormField => ({
+	username,
+	password
+});
+
 export interface LoginAttr {
 	connectLogin: () => void;
 }

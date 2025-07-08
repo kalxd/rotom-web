@@ -1,12 +1,16 @@
 import * as m from "drifloon/m";
 import { Form, FormAttr, RequireField, TrimInput } from "drifloon/form";
-import { Button, Segment, SegmentAttr, SegmentStyle, Header } from "drifloon/element";
+import { PrimaryButton, Segment, SegmentAttr, SegmentStyle, Header } from "drifloon/element";
 import { formMut } from "drifloon/data";
 import { Align, Color } from "drifloon/data/var";
 
 interface FormField {
 	username: string,
 	password: string,
+}
+
+export interface LoginAttr {
+	connectLogin: () => void;
 }
 
 const Main = (): m.Component => {
@@ -39,7 +43,7 @@ const Main = (): m.Component => {
 							m("label", "密码"),
 							m(TrimInput, { bindValue: fd.prop("password") })
 						]),
-						m(Button, "提交")
+						m(PrimaryButton, "提交")
 					])
 				])
 			]);

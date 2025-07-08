@@ -22,7 +22,16 @@ const config = {
 	devServer: {
 		static: {
 			directory: path.resolve("assert")
-		}
+		},
+		proxy: [
+			{
+				context: ["/api"],
+				target: "http://192.168.31.10:7002",
+				pathRewrite: {
+					"^/api": ""
+				}
+			}
+		]
 	}
 };
 

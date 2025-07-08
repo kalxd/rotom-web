@@ -9,10 +9,14 @@ import LoginForm from "./widget/login";
 const App = (): m.Component => {
 	const [updater, comp] = useDefLoader();
 
-	updater(() => {
+	updater(() => EitherAsync.fromPromise(async () => {
 		const token = Store.readToken();
-		return EitherAsync.liftEither(Right(LoginForm));
-	});
+		const rsp = await fetch("/api/user/self");
+		const result = await rsp.json();
+		console.log(result);
+
+		return Right(LoginForm);
+	}));
 
 	return {
 		view() {

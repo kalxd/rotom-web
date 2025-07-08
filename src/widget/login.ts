@@ -1,7 +1,8 @@
 import * as m from "drifloon/m";
 import { Form, FormAttr, RequireField, TrimInput } from "drifloon/form";
-import { Button } from "drifloon/element";
+import { Button, Segment, SegmentAttr, SegmentStyle, Header } from "drifloon/element";
 import { formMut } from "drifloon/data";
+import { Align, Color } from "drifloon/data/var";
 
 interface FormField {
 	username: string,
@@ -20,17 +21,28 @@ const Main = (): m.Component => {
 				formdata: fd
 			};
 
-			return m<FormAttr<FormField>, {}>(Form, formAttr, [
-				m(RequireField, [
-					m("label", "用户名"),
-					m(TrimInput, { bindValue: fd.prop("username") })
-				]),
-				m(RequireField, [
-					m("label", "密码"),
-					m(TrimInput, { bindValue: fd.prop("password") })
-				]),
-				m(Button, "登录")
-			])
+			const segmentAttr: SegmentAttr = {
+				color: Color.Teal,
+				style: SegmentStyle.Stack
+			};
+
+			return m.fragment({}, [
+				m(Header, { align: Align.Center }, "登录"),
+
+				m(Segment, segmentAttr, [
+					m<FormAttr<FormField>, {}>(Form, formAttr, [
+						m(RequireField, [
+							m("label", "用户名"),
+							m(TrimInput, { bindValue: fd.prop("username") })
+						]),
+						m(RequireField, [
+							m("label", "密码"),
+							m(TrimInput, { bindValue: fd.prop("password") })
+						]),
+						m(Button, "提交")
+					])
+				])
+			]);
 		}
 	};
 };

@@ -1,21 +1,33 @@
 import { mount } from "drifloon";
-import { EitherAsync, Right } from "drifloon/purify";
+import { EitherAsync } from "drifloon/purify";
+import * as C from "drifloon/codec";
 import * as m from "drifloon/m";
 import { useDefLoader } from "drifloon/module/loader";
 import * as Store from "./store";
 
-import LoginForm from "./widget/login";
+import Login from "./page/login";
+import App from "./page/app";
+import { userC } from "./ty";
 
-const App = (): m.Component => {
+const Root = (): m.Component => {
 	const [updater, comp] = useDefLoader();
 
-	updater(() => EitherAsync.fromPromise(async () => {
+	updater(() => EitherAsync(async helper => {
 		const token = Store.readToken();
-		const rsp = await fetch("/api/user/self");
-		const result = await rsp.json();
-		console.log(result);
 
-		return Right(LoginForm);
+		if (!token) {
+			return Login;
+		}
+
+		const muser = await fetch("/api/user/self")
+			.then(r => r.json())
+			.then(C.maybe(userC).decode)
+			.then(helper.liftEither);
+
+		return muser.caseOf({
+			Just: user => App,
+			Nothing: () => Login
+		});
 	}));
 
 	return {
@@ -26,9 +38,7 @@ const App = (): m.Component => {
 };
 
 const main = () => {
-	const token = Store.readToken();
-	console.log(token);
-	mount(App);
+	mount(Root);
 };
 
 main();

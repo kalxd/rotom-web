@@ -21,7 +21,7 @@ const config = {
 
 	devServer: {
 		static: {
-			directory: path.resolve("assert")
+			directory: path.resolve("dist")
 		},
 		proxy: [
 			{

@@ -18,6 +18,7 @@ const Root = (): m.Component => {
 	const LoginWrap: m.ComponentTypes = () => {
 		const onlogin = (session: SessionUserC): void => {
 			state.set(Just(session));
+			Store.writeToken(session.token);
 		};
 		return {
 			view: () => {
@@ -27,13 +28,19 @@ const Root = (): m.Component => {
 	};
 
 	updater(() => EitherAsync(async helper => {
-		const token = Store.readToken();
+		const token = Store.readToken().extract();
 
 		if (!token) {
 			return LoginWrap;
 		}
 
-		const muser = await fetch("/api/user/self")
+		const fetchInit = {
+			headers: {
+				"xgtoken": token
+			}
+		};
+
+		const muser = await fetch("/api/user/self", fetchInit)
 			.then(r => r.json())
 			.then(C.maybe(userC).decode)
 			.then(helper.liftEither);

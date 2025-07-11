@@ -15,7 +15,7 @@ const config = {
 		extensions: [".ts", ".js"]
 	},
 	output: {
-		path: path.resolve("./assert/")
+		path: path.resolve("./dist")
 	}
 };
 

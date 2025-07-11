@@ -1,5 +1,5 @@
 import { mount } from "drifloon";
-import { EitherAsync } from "drifloon/purify";
+import { EitherAsync, Just, Maybe, Nothing } from "drifloon/purify";
 import * as C from "drifloon/codec";
 import * as m from "drifloon/m";
 import { useDefLoader } from "drifloon/module/loader";
@@ -7,16 +7,30 @@ import * as Store from "./store";
 
 import Login from "./page/login";
 import App from "./page/app";
-import { userC } from "./ty";
+import { SessionUserC, userC } from "./ty";
+import { mutable } from "drifloon/data";
 
 const Root = (): m.Component => {
 	const [updater, comp] = useDefLoader();
+
+	const state = mutable<Maybe<SessionUserC>>(Nothing);
+
+	const LoginWrap: m.ComponentTypes = () => {
+		const onlogin = (session: SessionUserC): void => {
+			state.set(Just(session));
+		};
+		return {
+			view: () => {
+				return m(Login, { connectLogin: onlogin })
+			}
+		};
+	};
 
 	updater(() => EitherAsync(async helper => {
 		const token = Store.readToken();
 
 		if (!token) {
-			return Login;
+			return LoginWrap;
 		}
 
 		const muser = await fetch("/api/user/self")
@@ -26,13 +40,16 @@ const Root = (): m.Component => {
 
 		return muser.caseOf({
 			Just: user => App,
-			Nothing: () => Login
+			Nothing: () => LoginWrap
 		});
 	}));
 
 	return {
 		view() {
-			return m(comp);
+			return state.get().caseOf({
+				Just: sessionUser => m(App),
+				Nothing: () => m(comp)
+			});
 		}
 	};
 };

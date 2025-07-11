@@ -49,7 +49,7 @@ const validateForm = (data: FormField): ValidatorResult<SessionUserC> => {
 };
 
 export interface LoginAttr {
-	connectLogin: () => void;
+	connectLogin: (session: SessionUserC) => void;
 }
 
 const Main: m.ComponentTypes<LoginAttr> = () => {

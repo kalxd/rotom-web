@@ -40,7 +40,7 @@ const Root = (): m.Component => {
 			}
 		};
 
-		const muser = await fetch("/api/user/self", fetchInit)
+		const muser = await fetch("./api/user/self", fetchInit)
 			.then(r => r.json())
 			.then(C.maybe(userC).decode)
 			.then(helper.liftEither);

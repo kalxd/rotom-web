@@ -19,7 +19,7 @@ const makeFormField = (username: string, password: string): FormField => ({
 const loginApi = (data: FormField): EitherAsync<Error, SessionUserC> => {
 	return EitherAsync(async helper => {
 		const rsp = await fetch(
-			"/api/user/login",
+			"./api/user/login",
 			{
 				method: "POST",
 				body: JSON.stringify(data),

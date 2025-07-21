@@ -1,9 +1,10 @@
 import * as m from "drifloon/m";
-import { EitherAsync } from "drifloon/purify";
+import { EitherAsync, Just, Maybe, Nothing } from "drifloon/purify";
 import { useDefLoader } from "drifloon/module/loader";
 import { Container, Segment } from "drifloon/element";
-import { Select } from "drifloon/widget";
+import { FixSelect, FixSelectAttr } from "drifloon/widget";
 import * as C from "drifloon/codec";
+import { mutable } from "drifloon/data";
 import { UserC } from "../ty";
 import * as Fetch from "../fetch";
 import { Color } from "drifloon/data/var";
@@ -25,10 +26,19 @@ interface MainAppAttr {
 }
 
 const MainApp: m.ComponentTypes<MainAppAttr> = () => {
+	const selectRef = mutable<Maybe<CatC>>(Nothing);
+
 	return {
 		view: ({ attrs }) => {
+			const selectAttr: FixSelectAttr<Maybe<CatC>> = {
+				itemList: [Nothing, ...attrs.cats.map(Just)],
+				renderText: a => a.map(a => a.name).orDefault("默认"),
+				renderItem: a => a.map(a => a.name).orDefault("默认"),
+				bindValue: selectRef
+			};
+
 			return m(Container, m(Segment, { color: Color.Teal }, [
-				m(Select),
+				m<FixSelectAttr<Maybe<CatC>>, {}>(FixSelect, selectAttr),
 				m("h1", "hello")
 			]));
 		}

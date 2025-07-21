@@ -1,6 +1,6 @@
 import * as m from "drifloon/m";
 import { EitherAsync } from "drifloon/purify";
-import { Form, FormAttr, RequireField, TrimInput } from "drifloon/form";
+import { Form, FormAttr, RequireField, TrimInput, PasswordInput } from "drifloon/form";
 import { PrimaryButton, Segment, SegmentAttr, SegmentStyle, Header } from "drifloon/element";
 import { ValidatorResult, formMut, isNotEmpty, must } from "drifloon/data";
 import { Align, Color } from "drifloon/data/var";
@@ -85,7 +85,7 @@ const Main: m.ComponentTypes<LoginAttr> = () => {
 						]),
 						m(RequireField, [
 							m("label", "密码"),
-							m(TrimInput, { bindValue: fd.prop("password") })
+							m(PasswordInput, { bindValue: fd.prop("password") })
 						]),
 						m(PrimaryButton, { connectClick: onsubmit }, "提交")
 					])

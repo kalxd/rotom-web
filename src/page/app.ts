@@ -1,9 +1,12 @@
 import * as m from "drifloon/m";
 import { EitherAsync } from "drifloon/purify";
 import { useDefLoader } from "drifloon/module/loader";
+import { Container, Segment } from "drifloon/element";
+import { Select } from "drifloon/widget";
 import * as C from "drifloon/codec";
 import { UserC } from "../ty";
 import * as Fetch from "../fetch";
+import { Color } from "drifloon/data/var";
 
 const catC = C.Codec.interface({
 	id: C.number,
@@ -21,10 +24,15 @@ interface MainAppAttr {
 	emojis: Array<string>;
 }
 
-const MainApp: m.ComponentTypes<MainAppAttr> = {
-	view: ({ attrs }) => {
-		return m("div");
-	}
+const MainApp: m.ComponentTypes<MainAppAttr> = () => {
+	return {
+		view: ({ attrs }) => {
+			return m(Container, m(Segment, { color: Color.Teal }, [
+				m(Select),
+				m("h1", "hello")
+			]));
+		}
+	};
 };
 
 export interface AppAttr {

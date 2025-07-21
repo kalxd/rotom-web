@@ -3,12 +3,13 @@ import { EitherAsync, Just, Maybe, Nothing } from "drifloon/purify";
 import * as C from "drifloon/codec";
 import * as m from "drifloon/m";
 import { useDefLoader } from "drifloon/module/loader";
-import * as Store from "./store";
+import { mutable } from "drifloon/data";
 
+import * as Store from "./store";
 import Login from "./page/login";
 import App from "./page/app";
 import { SessionUserC, userC } from "./ty";
-import { mutable } from "drifloon/data";
+import * as Fetch from "./fetch";
 
 const Root = (): m.Component => {
 	const [updater, comp] = useDefLoader();
@@ -34,15 +35,7 @@ const Root = (): m.Component => {
 			return LoginWrap;
 		}
 
-		const fetchInit = {
-			headers: {
-				"xgtoken": token
-			}
-		};
-
-		const muser = await fetch("./api/user/self", fetchInit)
-			.then(r => r.json())
-			.then(C.maybe(userC).decode)
+		const muser = await Fetch.makeGet("/user/self", C.maybe(userC))
 			.then(helper.liftEither);
 
 		return muser.caseOf({

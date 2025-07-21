@@ -33,8 +33,6 @@ const makeFetch = async <T>(
 
 	try {
 		const rsp = await fetch(`./api${endpoint}`, init)
-		console.log(rsp.status);
-		console.log(rsp.statusText);
 		if (rsp.status === 200 || rsp.status === 300) {
 			const json = await rsp.json();
 			return codec.decode(json).mapLeft(catchAnyError);

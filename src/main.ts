@@ -20,6 +20,7 @@ const Root = (): m.Component => {
 		const onlogin = (session: SessionUserC): void => {
 			state.set(Just(session));
 			Store.writeToken(session.token);
+			Fetch.setToken(session.token);
 		};
 		return {
 			view: () => {
@@ -34,6 +35,8 @@ const Root = (): m.Component => {
 		if (!token) {
 			return LoginWrap;
 		}
+
+		Fetch.setToken(token);
 
 		const muser = await Fetch.makeGet("/user/self", C.maybe(userC))
 			.then(helper.liftEither);

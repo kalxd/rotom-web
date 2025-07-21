@@ -11,7 +11,7 @@ import App from "./page/app";
 import { SessionUserC, userC } from "./ty";
 import * as Fetch from "./fetch";
 
-const Root = (): m.Component => {
+const Root: m.ComponentTypes = () => {
 	const [updater, comp] = useDefLoader();
 
 	const state = mutable<Maybe<SessionUserC>>(Nothing);
@@ -42,7 +42,9 @@ const Root = (): m.Component => {
 			.then(helper.liftEither);
 
 		return muser.caseOf({
-			Just: user => App,
+			Just: user => () => ({
+				view: () => m(App, { user })
+			}),
 			Nothing: () => LoginWrap
 		});
 	}));
@@ -50,7 +52,7 @@ const Root = (): m.Component => {
 	return {
 		view() {
 			return state.get().caseOf({
-				Just: sessionUser => m(App),
+				Just: sessionUser => m<any, {}>(App, sessionUser),
 				Nothing: () => m(comp)
 			});
 		}

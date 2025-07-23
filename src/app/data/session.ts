@@ -7,7 +7,7 @@ export const readToken = (): string | null => {
 	return localStorage.getItem(TOKEN_KEY);
 };
 
-export const writeToken = (token: string): void => {
+const writeToken = (token: string): void => {
 	localStorage.setItem(TOKEN_KEY, token);
 };
 
@@ -30,4 +30,9 @@ export type SessionZ = z.infer<typeof sessionZ>;
 })
 export class Session {
 	session: SessionZ | undefined;
+
+	writeSession(session: SessionZ): void {
+		this.session = session;
+		writeToken(session.token);
+	}
 }

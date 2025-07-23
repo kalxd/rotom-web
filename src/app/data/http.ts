@@ -26,10 +26,8 @@ export class Http {
 			return R.of(undefined);
 		}
 
-		return this.http
-			.get("/user/self", { headers: { xgtoken: token }})
+		return this.makeGet("/user/self", sessionZ)
 			.pipe(
-				R.map(x => sessionZ.parse(x)),
 				R.tap(x => this.session.writeSession(x))
 			);
 	}

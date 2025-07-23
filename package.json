@@ -1,22 +1,45 @@
 {
-	"name": "rotom-web",
-	"version": "0.0.1",
-	"scripts": {
-		"dev": "webpack serve -c webpack/dev.js",
-		"release": "webpack -c webpack/release.js"
-	},
-	"author": "XG.Ley",
-	"license": "AGPL-3.0-or-later",
-	"devDependencies": {
-		"@types/mithril": "2.2.7",
-		"ts-loader": "9.5.2",
-		"typescript": "5.8.3",
-		"webpack": "5.99.9",
-		"webpack-cli": "6.0.1",
-		"webpack-dev-server": "5.2.2"
-	},
-	"dependencies": {
-		"drifloon": "0.20.30",
-		"purify-ts": "2.1.2"
-	}
+  "name": "rotom-web",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test"
+  },
+  "prettier": {
+    "overrides": [
+      {
+        "files": "*.html",
+        "options": {
+          "parser": "angular"
+        }
+      }
+    ]
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/common": "^20.1.0",
+    "@angular/compiler": "^20.1.0",
+    "@angular/core": "^20.1.0",
+    "@angular/forms": "^20.1.0",
+    "@angular/platform-browser": "^20.1.0",
+    "@angular/router": "^20.1.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^20.1.1",
+    "@angular/cli": "^20.1.1",
+    "@angular/compiler-cli": "^20.1.0",
+    "@types/jasmine": "~5.1.0",
+    "jasmine-core": "~5.8.0",
+    "karma": "~6.4.0",
+    "karma-chrome-launcher": "~3.2.0",
+    "karma-coverage": "~2.2.0",
+    "karma-jasmine": "~5.1.0",
+    "karma-jasmine-html-reporter": "~2.1.0",
+    "typescript": "~5.8.2"
+  }
 }

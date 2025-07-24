@@ -5,6 +5,8 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { LoginApi } from './api';
+import { Session } from '../../data/session';
 
 @Component({
 	selector: 'xg-login',
@@ -22,6 +24,8 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class Login {
 	private formBuilder = inject(FormBuilder);
+	private readonly loginApi = inject(LoginApi);
+	private session = inject(Session);
 
 	loginForm = this.formBuilder.group({
 		username: ["", Validators.required],
@@ -31,6 +35,18 @@ export class Login {
 	beginSubmitLoginForm(): void {
 		this.loginForm.markAllAsDirty();
 		this.loginForm.updateValueAndValidity();
-		console.log(this.loginForm.valid);
+
+		if (this.loginForm.invalid) {
+			return;
+		}
+
+		this.loginApi
+			.login({ username: this.loginForm.value.username!, password: this.loginForm.value.password! })
+			.subscribe({
+				next: session => {
+					this.session.session = session;
+				},
+				// error: console.log
+			});
 	}
 }

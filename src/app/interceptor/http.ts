@@ -4,10 +4,10 @@ import { inject } from '@angular/core';
 
 const fixWithPrefix = (url: string): string => {
 	if (url.startsWith("/")) {
-		return "_${url}";
+		return `_${url}`;
 	}
 	else {
-		return "_/${url}";
+		return `_/${url}`;
 	}
 };
 

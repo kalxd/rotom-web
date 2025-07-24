@@ -29,6 +29,8 @@ export class Login {
 	});
 
 	beginSubmitLoginForm(): void {
-		console.log(this.loginForm.value);
+		this.loginForm.markAllAsDirty();
+		this.loginForm.updateValueAndValidity();
+		console.log(this.loginForm.valid);
 	}
 }

@@ -9,19 +9,35 @@
 				<mat-form-field appearance="outline">
 					<mat-label>用户名</mat-label>
 					<input matInput formControlName="username" />
+					@if (loginForm.get("username"); as username) {
+					@if (username.invalid && username.dirty) {
+					@if (username.hasError("required")) {
+					<mat-error>请填写用户名！</mat-error>
+					}
+					}
+					}
 				</mat-form-field>
 			</p>
 
 			<p>
-				<mat-form-field>
+				<mat-form-field appearance="outline">
 					<mat-label>密码</mat-label>
 					<input matInput formControlName="password" />
+					@if (loginForm.get("password"); as password) {
+					@if (password.invalid && password.dirty) {
+
+					@if (password.hasError("required")) {
+					<mat-error>请填写密码！</mat-error>
+					}
+
+					}
+					}
 				</mat-form-field>
 			</p>
 		</div>
 	</mat-card-content>
 
 	<mat-card-actions>
-		<button matButton (click)="beginSubmitLoginForm()">submit</button>
+		<button matButton="elevated" (click)="beginSubmitLoginForm()">登录</button>
 	</mat-card-actions>
 </mat-card>

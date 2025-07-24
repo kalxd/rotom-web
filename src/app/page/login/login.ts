@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { LoginApi } from './api';
 import { Session } from '../../data/session';
+import { Alert } from '../../widget/alert/alert';
 
 @Component({
 	selector: 'xg-login',
@@ -26,6 +27,7 @@ export class Login {
 	private formBuilder = inject(FormBuilder);
 	private readonly loginApi = inject(LoginApi);
 	private session = inject(Session);
+	private alert = inject(Alert);
 
 	loginForm = this.formBuilder.group({
 		username: ["", Validators.required],
@@ -46,7 +48,7 @@ export class Login {
 				next: session => {
 					this.session.session = session;
 				},
-				// error: console.log
+				error: e => this.alert.show(e)
 			});
 	}
 }

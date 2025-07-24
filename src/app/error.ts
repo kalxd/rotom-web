@@ -1,6 +1,8 @@
 import { HttpErrorResponse } from "@angular/common/http";
-import { ErrorHandler } from "@angular/core";
+import { ErrorHandler, inject } from "@angular/core";
+import { MatDialog } from "@angular/material/dialog";
 import { z } from "zod";
+import { AlertDialog } from "./widget/alert/alert";
 
 const responseErrorZ = z.object({
 	msg: z.string()
@@ -8,21 +10,25 @@ const responseErrorZ = z.object({
 
 export class XGErrorHandler implements ErrorHandler {
 	handleError(error: any) {
-		if (error instanceof HttpErrorResponse) {
-			const e = error.error;
-			const result = responseErrorZ.safeParse(e);
-			if (result.success) {
-				alert(result.data.msg)
+		const dialog = inject(MatDialog);
+		const msg = (error => {
+			if (error instanceof HttpErrorResponse) {
+				const e = error.error;
+				const result = responseErrorZ.safeParse(e);
+				if (result.success) {
+					alert(result.data.msg)
+				}
+				else {
+					alert(result.error.message);
+				}
+			}
+			else if (error instanceof Error) {
+				alert(error.message);
 			}
 			else {
-				alert(result.error.message);
+				alert(`${error}`);
 			}
-		}
-		else if (error instanceof Error) {
-			alert(error.message);
-		}
-		else {
-			alert(`${error}`);
-		}
+		})(error);
+
 	}
 }

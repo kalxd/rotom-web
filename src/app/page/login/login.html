@@ -1,1 +1,27 @@
-<p>login works!</p>
+<mat-toolbar>
+	<span>请登录</span>
+</mat-toolbar>
+
+<mat-card>
+	<mat-card-content>
+		<div [formGroup]="loginForm">
+			<p>
+				<mat-form-field appearance="outline">
+					<mat-label>用户名</mat-label>
+					<input matInput formControlName="username" />
+				</mat-form-field>
+			</p>
+
+			<p>
+				<mat-form-field>
+					<mat-label>密码</mat-label>
+					<input matInput formControlName="password" />
+				</mat-form-field>
+			</p>
+		</div>
+	</mat-card-content>
+
+	<mat-card-actions>
+		<button matButton (click)="beginSubmitLoginForm()">submit</button>
+	</mat-card-actions>
+</mat-card>

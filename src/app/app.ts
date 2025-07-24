@@ -7,6 +7,7 @@ import { SessionZ } from './data/session';
 import { AsyncPipe } from '@angular/common';
 
 import { Load } from "./widget/load/load";
+import { Login} from "./page/login/login";
 
 @Component({
 	selector: 'app-root',
@@ -14,7 +15,8 @@ import { Load } from "./widget/load/load";
 		RouterOutlet,
 		AsyncPipe,
 
-		Load
+		Load,
+		Login
 	],
 	templateUrl: './app.html',
 	styleUrl: './app.css'

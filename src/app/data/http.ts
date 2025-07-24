@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import * as R from "rxjs";
 import { z } from "zod";
-import { readToken, Session, sessionZ, SessionZ } from './session';
+import { readToken, Session, UserZ, userZ } from './session';
 
 @Injectable({
 	providedIn: 'root'
@@ -20,15 +20,13 @@ export class Http {
 		return this.http.post(url, body).pipe(R.map(x => codec.parse(x)));
 	}
 
-	initSession(): Observable<SessionZ | undefined> {
+	initSession(): Observable<UserZ | null> {
 		const token = readToken();
 		if (token === null) {
-			return R.of(undefined);
+			return R.of(null);
 		}
 
-		return this.makeGet("/user/self", sessionZ)
-			.pipe(
-				R.tap(x => this.session.writeSession(x))
-			);
+		this.session.token.set(token);
+		return this.makeGet("/user/self", userZ.nullable());
 	}
 }

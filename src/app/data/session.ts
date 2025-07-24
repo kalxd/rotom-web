@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal, WritableSignal } from '@angular/core';
 import { z } from "zod";
 
 const TOKEN_KEY = "token";
@@ -7,7 +7,7 @@ export const readToken = (): string | null => {
 	return localStorage.getItem(TOKEN_KEY);
 };
 
-const writeToken = (token: string): void => {
+export const writeToken = (token: string): void => {
 	localStorage.setItem(TOKEN_KEY, token);
 };
 
@@ -29,10 +29,14 @@ export type SessionZ = z.infer<typeof sessionZ>;
 	providedIn: 'root'
 })
 export class Session {
-	session: SessionZ | undefined;
+	readonly token: WritableSignal<string | undefined> = signal(undefined);
+
+	writeToken(token: string): void {
+		this.token.set(token);
+		writeToken(token);
+	}
 
 	writeSession(session: SessionZ): void {
-		this.session = session;
-		writeToken(session.token);
+		this.writeToken(session.token);
 	}
 }

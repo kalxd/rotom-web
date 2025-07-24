@@ -1,13 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Http } from './data/http';
-import { Observable } from 'rxjs';
-import { SessionZ } from './data/session';
-
+import { Session } from './data/session';
 import { AsyncPipe } from '@angular/common';
-
 import { Load } from "./widget/load/load";
 import { Login} from "./page/login/login";
+import { Observable } from 'rxjs';
 
 @Component({
 	selector: 'app-root',
@@ -24,8 +22,9 @@ import { Login} from "./page/login/login";
 export class App {
 	protected readonly title = signal('rotom-web');
 	private readonly http = inject(Http);
+	readonly session = inject(Session);
 
-	session$: Observable<SessionZ | undefined>;
+	readonly session$: Observable<unknown>;
 
 	constructor() {
 		this.session$ = this.http.initSession();

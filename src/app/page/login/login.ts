@@ -36,7 +36,6 @@ export class Login {
 
 	beginSubmitLoginForm(): void {
 		this.loginForm.markAllAsDirty();
-		this.loginForm.updateValueAndValidity();
 
 		if (this.loginForm.invalid) {
 			return;
@@ -49,7 +48,7 @@ export class Login {
 			})
 			.subscribe({
 				next: session => {
-					this.session.session = session;
+					this.session.writeSession(session);
 				},
 				error: e => this.alert.show(e)
 			});

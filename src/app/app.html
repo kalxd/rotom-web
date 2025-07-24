@@ -1,11 +1,16 @@
 <main>
-	@let session = session$ | async;
+	@let sessionO = session$ | async;
 
-	@if (session === null) {
+	@if (sessionO === null) {
 	<xg-load />
 	}
 	@else {
+	@if (session.token()) {
+	<div>yes</div>
+	}
+	@else {
 	<xg-login />
+	}
 	}
 </main>
 

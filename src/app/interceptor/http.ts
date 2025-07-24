@@ -16,11 +16,12 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
 
 	const neoReq = (req => {
 		const fullUrl = fixWithPrefix(req.url);
-		const { session } = sessionSrv;
-		if (session) {
+		const token = sessionSrv.token();
+
+		if (token) {
 			return req.clone({
 				url: fullUrl,
-				headers: req.headers.set("xgtoken", session.token)
+				headers: req.headers.set("xgtoken", token)
 			});
 		}
 		else {

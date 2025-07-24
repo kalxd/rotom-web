@@ -8,14 +8,17 @@ import { SessionZ } from './data/session';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AsyncPipe } from '@angular/common';
 
+import { Load } from "./widget/load/load";
+
 @Component({
 	selector: 'app-root',
 	imports: [
 		RouterOutlet,
 		MatButton,
 		MatProgressSpinnerModule,
+		AsyncPipe,
 
-		AsyncPipe
+		Load
 	],
 	templateUrl: './app.html',
 	styleUrl: './app.css'

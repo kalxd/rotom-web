@@ -1,5 +1,12 @@
 <main>
-	<app-root />
+	@let session = session$ | async;
+
+	@if (session === null) {
+	<mat-spinner />
+	}
+	@else {
+	<div>finish</div>
+	}
 	<button matButton (click)="buttonClickE()">hello world</button>
 </main>
 

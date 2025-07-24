@@ -4,15 +4,18 @@ import { MatButton } from "@angular/material/button";
 import { Http } from './data/http';
 import { Observable } from 'rxjs';
 import { SessionZ } from './data/session';
-import { Root } from "./page/root/root";
+
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
 	selector: 'app-root',
 	imports: [
 		RouterOutlet,
 		MatButton,
+		MatProgressSpinnerModule,
 
-		Root
+		AsyncPipe
 	],
 	templateUrl: './app.html',
 	styleUrl: './app.css'
@@ -21,7 +24,11 @@ export class App {
 	protected readonly title = signal('rotom-web');
 	private readonly http = inject(Http);
 
-	user$: Observable<SessionZ | undefined> = this.http.initSession();
+	session$: Observable<SessionZ | undefined>;
+
+	constructor() {
+		this.session$ = this.http.initSession();
+	}
 
 	buttonClickE(): void {
 		alert("do this?");

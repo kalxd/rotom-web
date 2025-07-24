@@ -1,11 +1,9 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { MatButton } from "@angular/material/button";
 import { Http } from './data/http';
 import { Observable } from 'rxjs';
 import { SessionZ } from './data/session';
 
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AsyncPipe } from '@angular/common';
 
 import { Load } from "./widget/load/load";
@@ -14,8 +12,6 @@ import { Load } from "./widget/load/load";
 	selector: 'app-root',
 	imports: [
 		RouterOutlet,
-		MatButton,
-		MatProgressSpinnerModule,
 		AsyncPipe,
 
 		Load
@@ -31,10 +27,5 @@ export class App {
 
 	constructor() {
 		this.session$ = this.http.initSession();
-	}
-
-	buttonClickE(): void {
-		alert("do this?");
-		console.log("do this?");
 	}
 }

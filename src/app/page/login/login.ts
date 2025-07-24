@@ -43,7 +43,10 @@ export class Login {
 		}
 
 		this.loginApi
-			.login({ username: this.loginForm.value.username!, password: this.loginForm.value.password! })
+			.login({
+				username: this.loginForm.value.username!,
+				password: this.loginForm.value.password!
+			})
 			.subscribe({
 				next: session => {
 					this.session.session = session;

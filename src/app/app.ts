@@ -6,6 +6,7 @@ import { AsyncPipe } from '@angular/common';
 import { Load } from "./widget/load/load";
 import { Login} from "./page/login/login";
 import { Observable } from 'rxjs';
+import * as R from "rxjs";
 
 @Component({
 	selector: 'app-root',
@@ -24,9 +25,12 @@ export class App {
 	private readonly http = inject(Http);
 	readonly session = inject(Session);
 
-	readonly session$: Observable<unknown>;
+	readonly session$: Observable<boolean>;
 
 	constructor() {
-		this.session$ = this.http.initSession();
+		this.session$ = this.http.initSession()
+			.pipe(
+				R.map(_ => true)
+			);
 	}
 }

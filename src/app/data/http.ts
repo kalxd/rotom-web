@@ -27,6 +27,6 @@ export class Http {
 		}
 
 		this.session.token.set(token);
-		return this.makeGet("/user/self", userZ.nullable());
+		return this.makeGet("/self/info", userZ.nullable());
 	}
 }

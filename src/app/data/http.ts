@@ -22,6 +22,8 @@ export class Http {
 
 	initSession(): Observable<UserZ | null> {
 		const token = readToken();
+		console.log("do this?");
+		console.log(token);
 		if (token === null) {
 			return R.of(null);
 		}

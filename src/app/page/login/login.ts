@@ -21,7 +21,7 @@ import { Alert } from '../../widget/alert/alert';
 		MatButtonModule
 	],
 	templateUrl: './login.html',
-	styleUrl: './login.css'
+	styleUrl: './login.scss'
 })
 export class Login {
 	private formBuilder = inject(FormBuilder);

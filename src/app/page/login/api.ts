@@ -16,7 +16,7 @@ export class LoginApi {
 
 	login(option: LoginOption): Observable<SessionZ> {
 		return this.http.makePost(
-			"/user/login",
+			"/login",
 			option,
 			sessionZ
 		);

@@ -11,6 +11,7 @@ import { Alert } from '../../widget/alert/alert';
 import { Emoji } from "./emoji/emoji";
 import { toObservable } from '@angular/core/rxjs-interop';
 import { Load } from '../../widget/load/load';
+import { ActionResult } from '../../data/result';
 
 @Component({
 	selector: 'xg-dash',
@@ -36,7 +37,7 @@ export class Dash {
 	readonly cats: WritableSignal<Array<CatSelectItem>> = signal([]);
 	readonly curCat: WritableSignal<CatSelectItem>;
 
-	readonly emojis: WritableSignal<Array<EmojiZ> | null> = signal(null);
+	readonly emojis: WritableSignal<ActionResult<Array<EmojiZ>>> = signal(ActionResult.pend());
 
 	constructor() {
 		this.api.fetchAllCats()
@@ -55,8 +56,14 @@ export class Dash {
 
 		toObservable(this.curCat)
 			.pipe(
-				R.switchMap(cat => this.api.fetchAllEmojis(cat.id)),
-				R.delay(5 * 1000)
+				R.switchMap(cat => {
+					return this.api.fetchAllEmojis(cat.id)
+						.pipe(
+							R.map(xs => ActionResult.ready(xs)),
+							R.delay(5 * 1000),
+							R.startWith(ActionResult.pend())
+						);
+				})
 			)
 			.subscribe(xs => this.emojis.set(xs));
 	}

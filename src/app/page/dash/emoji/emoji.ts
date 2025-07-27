@@ -9,5 +9,4 @@ import { EmojiZ } from '../api';
 })
 export class Emoji {
 	emojis = input.required<Array<EmojiZ>>();
-
 }

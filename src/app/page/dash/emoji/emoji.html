@@ -1,3 +1,16 @@
-@for (emoji of emojis(); track emoji.id) {
-<p>{{ emoji.id }} - {{ emoji.desc }}</p>
-}
+<mat-grid-list cols="4" rowHeight="1:1">
+	@for (emoji of emojis(); track emoji.id) {
+	<mat-grid-tile>
+		<mat-card appearance="outlined">
+			@let imgSrc = "/file/view/" + emoji.fileSha;
+			<img mat-card-image [src]="imgSrc" />
+			<mat-card-content>
+				<p>{{ emoji.id }} - {{ emoji.desc }}</p>
+			</mat-card-content>
+			<mat-card-actions>
+				<button>ok</button>
+			</mat-card-actions>
+		</mat-card>
+	</mat-grid-tile>
+	}
+</mat-grid-list>

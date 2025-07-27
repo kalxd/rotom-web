@@ -1,0 +1,28 @@
+@if (data === null) {
+<h2 mat-dialog-title>添加新分类</h2>
+}
+@else {
+<h2 mat-dialog-title>编辑分类：{{ data.name }}</h2>
+}
+
+<mat-dialog-content [formGroup]="dialogForm">
+	<p>
+		<mat-form-field>
+			<mat-label>分类名称</mat-label>
+			<input matInput formControlName="name" />
+			@if (dialogForm.get("name"); as name) {
+
+			@if (name.invalid && name.dirty) {
+			@if (name.hasError("required")) {
+			<mat-error>请填写分类名称！</mat-error>
+			}
+			}
+			}
+		</mat-form-field>
+	</p>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+	<button matButton [mat-dialog-close]="null">不好</button>
+	<button matButton (click)="checkForm()">好</button>
+</mat-dialog-actions>

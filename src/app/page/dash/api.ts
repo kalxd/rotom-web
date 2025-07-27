@@ -9,7 +9,15 @@ const catZ = z.object({
 	name: z.string()
 });
 
-export type CatZ = z.infer<typeof catZ>;
+export interface CatSelectItem {
+	id: number | null;
+	name: string;
+}
+
+export const catSelectItemDef: CatSelectItem = {
+	id: null,
+	name: "默认分类"
+};
 
 @Injectable({
 	providedIn: 'root'
@@ -17,11 +25,16 @@ export type CatZ = z.infer<typeof catZ>;
 export class Api {
 	private readonly http = inject(Http);
 
-	fetchAllCats(): Observable<Array<CatZ | null>> {
+	fetchAllCats(): Observable<Array<CatSelectItem>> {
 		return this.http
 			.makeGet("/self/cat/list", catZ.array())
 			.pipe(
-				R.map(xs => [null, ...xs])
+				R.map(xs => {
+					return [
+						catSelectItemDef,
+						...xs
+					];
+				})
 			);
 	}
 }

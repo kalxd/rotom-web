@@ -1,21 +1,20 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, linkedSignal, signal, WritableSignal } from '@angular/core';
 import { MatToolbar } from "@angular/material/toolbar";
-import { Api, CatZ } from './api';
-import { Observable } from 'rxjs';
-import { AsyncPipe } from '@angular/common';
-import { Load } from '../../widget/load/load';
+import { Api, CatSelectItem, catSelectItemDef } from './api';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { MatButton } from '@angular/material/button';
+import { FormsModule } from '@angular/forms';
 
 @Component({
 	selector: 'xg-dash',
 	imports: [
-		AsyncPipe,
+		FormsModule,
 
-		Load,
 		MatToolbar,
 		MatFormFieldModule,
-		MatSelectModule
+		MatSelectModule,
+		MatButton
 	],
 	templateUrl: './dash.html',
 	styleUrl: './dash.scss'
@@ -23,9 +22,22 @@ import { MatSelectModule } from '@angular/material/select';
 export class Dash {
 	private readonly api = inject(Api);
 
-	readonly catsSelect$: Observable<Array<CatZ | null>>;
+	readonly cats: WritableSignal<Array<CatSelectItem>> = signal([]);
+	readonly curCat: WritableSignal<CatSelectItem>;
 
 	constructor() {
-		this.catsSelect$ = this.api.fetchAllCats();
+		this.api.fetchAllCats()
+			.subscribe(xs => this.cats.set(xs));
+
+		this.curCat = linkedSignal({
+			source: this.cats,
+			computation: (nextCats, curCat) => {
+				if (curCat === undefined) {
+					return catSelectItemDef;
+				}
+
+				return nextCats.find(x => x.id === curCat.value.id) ?? catSelectItemDef;
+			}
+		});
 	}
 }

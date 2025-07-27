@@ -2,21 +2,15 @@
 	你好啊
 </mat-toolbar>
 
-@if (catsSelect$ | async; as cats) {
 <mat-form-field>
 	<mat-label>表情分类</mat-label>
-	<mat-select>
-		@for (cat of cats; track $index) {
-		@if (cat === null) {
-		<mat-option [value]="null">默认分类</mat-option>
-		}
-		@else {
-		<mat-option [value]="cat.id">{{ cat.name }}</mat-option>
-		}
+	<mat-select [(ngModel)]="curCat">
+		@for (cat of cats(); track $index) {
+		<mat-option [value]="cat">{{ cat.name }}</mat-option>
 		}
 	</mat-select>
+
 </mat-form-field>
-}
-@else {
-<xg-load />
-}
+
+<button matButton="outlined">添加分类</button>
+<button matButton="outlined">删除当前分类</button>

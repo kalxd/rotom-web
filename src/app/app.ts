@@ -5,6 +5,7 @@ import { Session } from './data/session';
 import { AsyncPipe } from '@angular/common';
 import { Load } from "./widget/load/load";
 import { Login} from "./page/login/login";
+import { Dash } from './page/dash/dash';
 import { Observable } from 'rxjs';
 import * as R from "rxjs";
 
@@ -15,7 +16,8 @@ import * as R from "rxjs";
 		AsyncPipe,
 
 		Load,
-		Login
+		Login,
+		Dash
 	],
 	templateUrl: './app.html',
 	styleUrl: './app.css'

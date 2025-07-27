@@ -1,0 +1,22 @@
+<mat-toolbar>
+	你好啊
+</mat-toolbar>
+
+@if (catsSelect$ | async; as cats) {
+<mat-form-field>
+	<mat-label>表情分类</mat-label>
+	<mat-select>
+		@for (cat of cats; track $index) {
+		@if (cat === null) {
+		<mat-option [value]="null">默认分类</mat-option>
+		}
+		@else {
+		<mat-option [value]="cat.id">{{ cat.name }}</mat-option>
+		}
+		}
+	</mat-select>
+</mat-form-field>
+}
+@else {
+<xg-load />
+}

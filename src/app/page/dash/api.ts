@@ -19,6 +19,13 @@ export const catSelectItemDef: CatSelectItem = {
 	name: "默认分类"
 };
 
+interface UpdateCat {
+	id: number;
+	data: {
+		name: string;
+	}
+}
+
 @Injectable({
 	providedIn: 'root'
 })
@@ -41,5 +48,10 @@ export class Api {
 	addCat(data: { name: string }): Observable<CatSelectItem> {
 		return this.http
 			.makePost("/self/cat/create", data, catZ);
+	}
+
+	updateCat(data: UpdateCat): Observable<CatSelectItem> {
+		return this.http
+			.makePost("/self/cat/update", data, catZ);
 	}
 }

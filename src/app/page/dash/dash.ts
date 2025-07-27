@@ -7,6 +7,7 @@ import { MatButton } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { AddCat } from './addcat/addcat';
 import * as R from "rxjs";
+import { Alert } from '../../widget/alert/alert';
 
 @Component({
 	selector: 'xg-dash',
@@ -24,6 +25,7 @@ import * as R from "rxjs";
 export class Dash {
 	private readonly api = inject(Api);
 	private readonly addCat = inject(AddCat);
+	private readonly alert = inject(Alert);
 
 	readonly cats: WritableSignal<Array<CatSelectItem>> = signal([]);
 	readonly curCat: WritableSignal<CatSelectItem>;
@@ -56,6 +58,24 @@ export class Dash {
 	}
 
 	openAddCatWith(): void {
-		this.addCat.show({ name: this.curCat().name });
+		const curCat = this.curCat();
+		const curCatId = curCat.id;
+
+		if (curCatId === null) {
+			return this.alert.show("很明显，不允许编辑“默认分类”。");
+		}
+		this.addCat.show({ name: this.curCat().name })
+			.pipe(
+				R.switchMap(x => {
+					return this.api.updateCat({
+						id: curCatId,
+						data: {
+							name: x.name
+						}
+					});
+				}),
+				R.switchMap(_ => this.api.fetchAllCats())
+			)
+			.subscribe(xs => this.cats.set(xs));
 	}
 }

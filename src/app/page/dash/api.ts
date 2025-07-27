@@ -19,6 +19,15 @@ export const catSelectItemDef: CatSelectItem = {
 	name: "默认分类"
 };
 
+const emojiZ = z.object({
+	id: z.number(),
+	catId: z.number().nullable(),
+	desc: z.string().nullable(),
+	fileSha: z.string()
+});
+
+export type EmojiZ = z.infer<typeof emojiZ>;
+
 interface UpdateCat {
 	id: number;
 	data: {
@@ -53,5 +62,10 @@ export class Api {
 	updateCat(data: UpdateCat): Observable<CatSelectItem> {
 		return this.http
 			.makePost("/self/cat/update", data, catZ);
+	}
+
+	fetchAllEmojis(catId: number | null): Observable<Array<EmojiZ>> {
+		return this.http
+			.makePost("/self/emoji/list", { catId }, emojiZ.array());
 	}
 }

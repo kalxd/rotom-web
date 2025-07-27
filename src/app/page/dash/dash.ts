@@ -1,6 +1,6 @@
 import { Component, inject, linkedSignal, signal, WritableSignal } from '@angular/core';
 import { MatToolbar } from "@angular/material/toolbar";
-import { Api, CatSelectItem, catSelectItemDef } from './api';
+import { Api, CatSelectItem, catSelectItemDef, EmojiZ } from './api';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButton } from '@angular/material/button';
@@ -8,6 +8,9 @@ import { FormsModule } from '@angular/forms';
 import { AddCat } from './addcat/addcat';
 import * as R from "rxjs";
 import { Alert } from '../../widget/alert/alert';
+import { Emoji } from "./emoji/emoji";
+import { toObservable } from '@angular/core/rxjs-interop';
+import { Load } from '../../widget/load/load';
 
 @Component({
 	selector: 'xg-dash',
@@ -17,7 +20,10 @@ import { Alert } from '../../widget/alert/alert';
 		MatToolbar,
 		MatFormFieldModule,
 		MatSelectModule,
-		MatButton
+		MatButton,
+
+		Load,
+		Emoji
 	],
 	templateUrl: './dash.html',
 	styleUrl: './dash.scss'
@@ -29,6 +35,8 @@ export class Dash {
 
 	readonly cats: WritableSignal<Array<CatSelectItem>> = signal([]);
 	readonly curCat: WritableSignal<CatSelectItem>;
+
+	readonly emojis: WritableSignal<Array<EmojiZ> | null> = signal(null);
 
 	constructor() {
 		this.api.fetchAllCats()
@@ -44,6 +52,13 @@ export class Dash {
 				return nextCats.find(x => x.id === curCat.value.id) ?? catSelectItemDef;
 			}
 		});
+
+		toObservable(this.curCat)
+			.pipe(
+				R.switchMap(cat => this.api.fetchAllEmojis(cat.id)),
+				R.delay(5 * 1000)
+			)
+			.subscribe(xs => this.emojis.set(xs));
 	}
 
 	openAddCat(): void {

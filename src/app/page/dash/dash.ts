@@ -46,9 +46,12 @@ export class Dash {
 
 	openAddCat(): void {
 		this.addCat.show(null)
-			.subscribe(x => {
-				console.log("do this?")
-				console.log(x);
+			.pipe(
+				R.switchMap(x => this.api.addCat(x)),
+				R.switchMap(_ => this.api.fetchAllCats())
+			)
+			.subscribe(xs => {
+				this.cats.set(xs);
 			});
 	}
 

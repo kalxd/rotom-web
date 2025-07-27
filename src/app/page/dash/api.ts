@@ -37,4 +37,9 @@ export class Api {
 				})
 			);
 	}
+
+	addCat(data: { name: string }): Observable<CatSelectItem> {
+		return this.http
+			.makePost("/self/cat/create", data, catZ);
+	}
 }

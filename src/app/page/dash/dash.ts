@@ -12,6 +12,7 @@ import { Emoji } from "./emoji/emoji";
 import { toObservable } from '@angular/core/rxjs-interop';
 import { Load } from '../../widget/load/load';
 import { ActionResult } from '../../data/result';
+import { Upload } from './upload/upload';
 
 @Component({
 	selector: 'xg-dash',
@@ -33,6 +34,7 @@ export class Dash {
 	private readonly api = inject(Api);
 	private readonly addCat = inject(AddCat);
 	private readonly alert = inject(Alert);
+	private readonly uploadDialog = inject(Upload);
 
 	readonly cats: WritableSignal<Array<CatSelectItem>> = signal([]);
 	readonly curCat: WritableSignal<CatSelectItem>;
@@ -60,7 +62,6 @@ export class Dash {
 					return this.api.fetchAllEmojis(cat.id)
 						.pipe(
 							R.map(xs => ActionResult.ready(xs)),
-							R.delay(5 * 1000),
 							R.startWith(ActionResult.pend())
 						);
 				})
@@ -99,5 +100,9 @@ export class Dash {
 				R.switchMap(_ => this.api.fetchAllCats())
 			)
 			.subscribe(xs => this.cats.set(xs));
+	}
+
+	openAddEmojiDialog(): void {
+		this.uploadDialog.show(this.curCat());
 	}
 }

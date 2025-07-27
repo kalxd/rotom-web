@@ -2,6 +2,8 @@
 	你好啊
 </mat-toolbar>
 
+<button matButton="filled" (click)="openAddEmojiDialog()">添加表情</button>
+
 <mat-form-field>
 	<mat-label>表情分类</mat-label>
 	<mat-select [(ngModel)]="curCat">

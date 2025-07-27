@@ -1,1 +1,30 @@
-<p>upload works!</p>
+<h2 mat-dialog-title>添加表情</h2>
+
+<mat-dialog-content>
+	<mat-tab-group [(selectedIndex)]="curTabIdx">
+		<mat-tab label="网络表情">
+			<div [formGroup]="netForm">
+				<p>
+					<mat-form-field>
+						<mat-label>网络地址</mat-label>
+						<input matInput formControlName="name" />
+						@if (netForm.get("url"); as url) {
+						@if (url.invalid && url.dirty) {
+						<mat-error>请填写表情地址！</mat-error>
+						}
+						}
+					</mat-form-field>
+				</p>
+			</div>
+		</mat-tab>
+
+		<mat-tab label="本地表情">
+			2
+		</mat-tab>
+	</mat-tab-group>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+	<button matButton mat-dialog-close>不好</button>
+	<button matButton (click)="connectSubmit()">好</button>
+</mat-dialog-actions>

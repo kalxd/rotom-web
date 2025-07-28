@@ -43,7 +43,10 @@ export class Dash {
 
 	constructor() {
 		this.api.fetchAllCats()
-			.subscribe(xs => this.cats.set(xs));
+			.subscribe({
+				next: xs => this.cats.set(xs),
+				error: e => this.alert.show(e)
+			});
 
 		this.curCat = linkedSignal({
 			source: this.cats,
@@ -66,7 +69,10 @@ export class Dash {
 						);
 				})
 			)
-			.subscribe(xs => this.emojis.set(xs));
+			.subscribe({
+				next: xs => this.emojis.set(xs),
+				error: e => this.alert.show(e)
+			});
 	}
 
 	openAddCat(): void {
@@ -75,8 +81,11 @@ export class Dash {
 				R.switchMap(x => this.api.addCat(x)),
 				R.switchMap(_ => this.api.fetchAllCats())
 			)
-			.subscribe(xs => {
-				this.cats.set(xs);
+			.subscribe({
+				next: xs => {
+					this.cats.set(xs);
+				},
+				error: e => this.alert.show(e)
 			});
 	}
 
@@ -99,10 +108,27 @@ export class Dash {
 				}),
 				R.switchMap(_ => this.api.fetchAllCats())
 			)
-			.subscribe(xs => this.cats.set(xs));
+			.subscribe({
+				next: xs => this.cats.set(xs),
+				error: e => this.alert.show(e)
+			});
 	}
 
 	openAddEmojiDialog(): void {
-		this.uploadDialog.show(this.curCat());
+		this.uploadDialog.show(this.curCat())
+			.pipe(
+				R.switchMap(_ => {
+					const catId = this.curCat().id;
+					return this.api.fetchAllEmojis(catId)
+						.pipe(
+							R.map(x => ActionResult.ready(x)),
+							R.startWith(ActionResult.pend())
+						);
+				})
+			)
+			.subscribe({
+				next: xs => this.emojis.set(xs),
+				error: e => this.alert.show(e)
+			});
 	}
 }

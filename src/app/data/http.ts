@@ -20,6 +20,11 @@ interface TokenOption {
 	}
 }
 
+const fileZ = z.object({
+	sha: z.string(),
+	extension: z.string()
+});
+
 @Injectable({
 	providedIn: 'root'
 })
@@ -68,5 +73,18 @@ export class Http {
 
 		this.session.token.set(token);
 		return this.makeGet("/self/info", userZ.nullable());
+	}
+
+	uploadFile(file: File): Observable<z.infer<typeof fileZ>> {
+		const fd = new FormData();
+		fd.append("file", file);
+
+		const url = fixWithPrefix("/file/upload");
+		const opt = this.makeFetchOption();
+		return this.http
+			.post(url, fd, opt)
+			.pipe(
+				R.map(x => fileZ.parse(x))
+			);
 	}
 }

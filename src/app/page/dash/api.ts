@@ -35,6 +35,12 @@ interface UpdateCat {
 	}
 }
 
+interface AddEmojiOption {
+	fileSha: string;
+	catId: number | null;
+	desc: string | null;
+}
+
 @Injectable({
 	providedIn: 'root'
 })
@@ -67,5 +73,10 @@ export class Api {
 	fetchAllEmojis(catId: number | null): Observable<Array<EmojiZ>> {
 		return this.http
 			.makePost("/self/emoji/list", { catId }, emojiZ.array());
+	}
+
+	addEmoji(emoji: AddEmojiOption): Observable<EmojiZ> {
+		return this.http
+			.makePost("/self/emoji/create", emoji, emojiZ);
 	}
 }

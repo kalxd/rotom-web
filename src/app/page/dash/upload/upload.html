@@ -7,7 +7,7 @@
 				<p>
 					<mat-form-field>
 						<mat-label>网络地址</mat-label>
-						<input matInput formControlName="name" />
+						<input matInput formControlName="url" />
 						@if (netForm.get("url"); as url) {
 						@if (url.invalid && url.dirty) {
 						<mat-error>请填写表情地址！</mat-error>
@@ -19,9 +19,28 @@
 		</mat-tab>
 
 		<mat-tab label="本地表情">
-			2
+			<p>
+				<input
+					type="file"
+					(change)="connectLocalFileChange($event)"
+					accept="image/gif, image/jpeg, image/png, image/webp"
+					/>
+				@if (localError(); as err) {
+				<mat-error>{{ err }}</mat-error>
+				}
+			</p>
+			<p [formGroup]="localForm">
+				<mat-form-field>
+					<mat-label>简单描述</mat-label>
+					<input matInput formControlName="desc" />
+				</mat-form-field>
+			</p>
 		</mat-tab>
 	</mat-tab-group>
+
+	@if (isUpload()) {
+	<p>正在上传……</p>
+	}
 </mat-dialog-content>
 
 <mat-dialog-actions>

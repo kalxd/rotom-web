@@ -5,10 +5,11 @@
 			@let imgSrc = "/_/file/view/" + emoji.fileSha;
 			<img mat-card-image [src]="imgSrc" style="max-width: 100%; max-height: 100%;" />
 			<mat-card-content>
-				<p>{{ emoji.id }} - {{ emoji.desc }}</p>
+				<p>{{ emoji.desc }}</p>
 			</mat-card-content>
 			<mat-card-actions>
-				<button>ok</button>
+				<button matButton>编辑</button>
+				<button matButton>删除</button>
 			</mat-card-actions>
 		</mat-card>
 	</mat-grid-tile>

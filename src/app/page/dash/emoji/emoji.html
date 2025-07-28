@@ -1,9 +1,9 @@
-<mat-grid-list cols="4" rowHeight="1:1">
+<mat-grid-list cols="3">
 	@for (emoji of emojis(); track emoji.id) {
 	<mat-grid-tile>
 		<mat-card appearance="outlined">
-			@let imgSrc = "/file/view/" + emoji.fileSha;
-			<img mat-card-image [src]="imgSrc" />
+			@let imgSrc = "/_/file/view/" + emoji.fileSha;
+			<img mat-card-image [src]="imgSrc" style="max-width: 100%; max-height: 100%;" />
 			<mat-card-content>
 				<p>{{ emoji.id }} - {{ emoji.desc }}</p>
 			</mat-card-content>

@@ -61,6 +61,7 @@ export class Dash {
 
 		toObservable(this.curCat)
 			.pipe(
+				R.distinctUntilKeyChanged('id'),
 				R.switchMap(cat => {
 					return this.api.fetchAllEmojis(cat.id)
 						.pipe(
@@ -104,7 +105,7 @@ export class Dash {
 						data: {
 							name: x.name
 						}
-					});
+					}).pipe(R.tap(c => this.curCat.set(c)));
 				}),
 				R.switchMap(_ => this.api.fetchAllCats())
 			)

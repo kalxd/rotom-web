@@ -1,8 +1,7 @@
 import { Component, inject, Injectable, signal, WritableSignal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { MatTabsModule } from '@angular/material/tabs';
 import { Api, CatSelectItem, EmojiZ } from '../api';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -16,7 +15,6 @@ import { Alert } from '../../../widget/alert/alert';
 	imports: [
 		ReactiveFormsModule,
 
-		MatTabsModule,
 		MatDialogModule,
 		MatButtonModule,
 		MatInputModule,
@@ -26,7 +24,6 @@ import { Alert } from '../../../widget/alert/alert';
 	styleUrl: './upload.scss'
 })
 export class UploadDialog {
-	readonly curTabIdx = signal(0);
 	private readonly api = inject(Api);
 	private selfDialog = inject(MatDialogRef<UploadDialog>);
 	private readonly data = inject<CatSelectItem>(MAT_DIALOG_DATA);
@@ -34,20 +31,6 @@ export class UploadDialog {
 	readonly isUpload = signal(false);
 	private readonly http = inject(Http);
 	private readonly alert = inject(Alert);
-
-	/** 网络表情 */
-	netForm = this.fb.group({
-		url: ["", Validators.required],
-		desc: [""]
-	});
-
-	private connectSubmitNet(): void {
-		this.netForm.markAllAsDirty();
-		if (this.netForm.invalid) {
-			return ;
-		}
-	}
-	/** 结束于网络表情 */
 
 	/** 本地表情 */
 	private readonly localFile: WritableSignal<File | undefined> = signal(undefined);
@@ -103,13 +86,7 @@ export class UploadDialog {
 	/** 结束于本地表情 */
 
 	connectSubmit(): void {
-		const curTabIdx = this.curTabIdx();
-		if (curTabIdx === 0) {
-			return this.connectSubmitNet();
-		}
-		else if (curTabIdx === 1) {
-			return this.connectSubmitLocal();
-		}
+		this.connectSubmitLocal();
 	}
 }
 

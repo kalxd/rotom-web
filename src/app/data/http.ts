@@ -76,8 +76,15 @@ export class Http {
 			return R.of(null);
 		}
 
-		return this.makeGet("/self/info", userZ.nullable())
+		const opt = {
+			headers: {
+				xgtoken: token
+			}
+		};
+
+		return this.http.get(fixWithPrefix("/self/info"), opt)
 			.pipe(
+				R.map(x => userZ.nullable().parse(x)),
 				R.map(user => {
 					if (user === null) {
 						return null;

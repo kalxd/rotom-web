@@ -1,7 +1,5 @@
 <main>
-	@let sessionO = session$ | async;
-
-	@if (sessionO === null) {
+	@if (curSession().isPend()) {
 	<xg-load />
 	}
 	@else {

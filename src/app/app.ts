@@ -1,19 +1,16 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Http } from './data/http';
 import { Session } from './data/session';
-import { AsyncPipe } from '@angular/common';
 import { Load } from "./widget/load/load";
 import { Login} from "./page/login/login";
 import { Dash } from './page/dash/dash';
-import { Observable } from 'rxjs';
-import * as R from "rxjs";
+import { ActionResult } from './data/result';
 
 @Component({
 	selector: 'app-root',
 	imports: [
 		RouterOutlet,
-		AsyncPipe,
 
 		Load,
 		Login,
@@ -23,16 +20,19 @@ import * as R from "rxjs";
 	styleUrl: './app.css'
 })
 export class App {
-	protected readonly title = signal('rotom-web');
 	private readonly http = inject(Http);
 	readonly session = inject(Session);
-
-	readonly session$: Observable<boolean>;
+	protected readonly curSession: WritableSignal<ActionResult<unknown>>
+		= signal(ActionResult.pend());
 
 	constructor() {
-		this.session$ = this.http.initSession()
-			.pipe(
-				R.map(_ => true)
-			);
+		this.http.initSession()
+			.subscribe(session => {
+				if (session !== null) {
+					this.session.token.set(session.token);
+				}
+
+				this.curSession.set(ActionResult.ready(session));
+			});
 	}
 }

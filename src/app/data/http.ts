@@ -20,6 +20,11 @@ interface TokenOption {
 	}
 }
 
+interface SessionUser {
+	token: string;
+	user: UserZ;
+}
+
 const fileZ = z.object({
 	sha: z.string(),
 	extension: z.string()
@@ -65,14 +70,21 @@ export class Http {
 		return this.makePostFetch(url, body, codec);
 	}
 
-	initSession(): Observable<UserZ | null> {
+	initSession(): Observable<SessionUser | null> {
 		const token = readToken();
 		if (token === null) {
 			return R.of(null);
 		}
 
-		this.session.token.set(token);
-		return this.makeGet("/self/info", userZ.nullable());
+		return this.makeGet("/self/info", userZ.nullable())
+			.pipe(
+				R.map(user => {
+					if (user === null) {
+						return null;
+					}
+					return { token, user };
+				})
+			);
 	}
 
 	uploadFile(file: File): Observable<z.infer<typeof fileZ>> {

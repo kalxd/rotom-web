@@ -21,11 +21,20 @@ interface EmojiChangeEvent {
 export class Emoji {
 	emojis = input.required<Array<EmojiZ>>();
 	emojiChange = output<EmojiChangeEvent>();
+	emojiDelete = output<EmojiZ>();
 
 	private readonly descDialog = inject(DescDialog);
 
 	showDescEditor(emoji: EmojiZ): void {
 		this.descDialog.show(emoji.desc)
 			.subscribe(desc => this.emojiChange.emit({ emoji, desc }));
+	}
+
+	confirmDelete(emoji: EmojiZ): void {
+		if (!confirm("确认删除当前表情？")) {
+			return ;
+		}
+
+		this.emojiDelete.emit(emoji);
 	}
 }

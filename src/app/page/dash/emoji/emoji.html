@@ -7,7 +7,7 @@
 	</mat-card-content>
 	<mat-card-actions>
 		<button matButton (click)="showDescEditor(emoji)">编辑</button>
-		<button matButton>删除</button>
+		<button matButton (click)="confirmDelete(emoji)">删除</button>
 	</mat-card-actions>
 </mat-card>
 }

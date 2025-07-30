@@ -133,4 +133,9 @@ export class Dash {
 		const update$ = this.api.editEmojiDesc(event.emoji.id, event.desc)
 		this.refreshEmojiListFrom(update$);
 	}
+
+	protected connectEmojiDelete(emoji: EmojiZ): void {
+		const api$ = this.api.removeEmoji(emoji.id);
+		this.refreshEmojiListFrom(api$);
+	}
 }

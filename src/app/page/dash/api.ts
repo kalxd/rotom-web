@@ -91,4 +91,12 @@ export class Api {
 		return this.http
 			.makePost("/self/emoji/update/desc", body, emojiZ);
 	}
+
+	removeEmoji(emojiId: number): Observable<void> {
+		const body = {
+			id: emojiId
+		};
+
+		return this.http.makePost("/self/emoji/delete", body, z.any());
+	}
 }

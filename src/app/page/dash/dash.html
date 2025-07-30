@@ -21,5 +21,9 @@
 <xg-load />
 }
 @else {
-<xg-emoji [emojis]="emojis().value" (emojiChange)="connectEmojiChange($event)" />
+<xg-emoji
+	[emojis]="emojis().value"
+	(emojiChange)="connectEmojiChange($event)"
+	(emojiDelete)="connectEmojiDelete($event)"
+	/>
 }

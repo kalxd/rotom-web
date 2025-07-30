@@ -1,14 +1,12 @@
 import { Component, input } from '@angular/core';
 import { EmojiZ } from '../api';
 import { MatCardModule } from '@angular/material/card';
-import { MatGridListModule } from '@angular/material/grid-list';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
 	selector: 'xg-emoji',
 	imports: [
 		MatCardModule,
-		MatGridListModule,
 		MatButtonModule
 	],
 	templateUrl: './emoji.html',

@@ -59,15 +59,24 @@ export class Dash {
 			}
 		});
 
-		toObservable(this.curCat)
+		const catChange$ = toObservable(this.curCat)
 			.pipe(
-				R.distinctUntilKeyChanged('id'),
-				R.switchMap(cat => {
-					return this.api.fetchAllEmojis(cat.id)
-						.pipe(
-							R.map(xs => ActionResult.ready(xs)),
-							R.startWith(ActionResult.pend())
-						);
+				R.distinctUntilKeyChanged('id')
+			);
+
+		this.refreshEmojiListFrom(catChange$);
+	}
+
+	private refreshEmojiListFrom(ob: R.Observable<unknown>): void {
+		const catId = this.curCat().id;
+
+		ob
+			.pipe(
+				R.switchMap(_ => {
+					return this.api.fetchAllEmojis(catId).pipe(
+						R.map(x => ActionResult.ready(x)),
+						R.startWith(ActionResult.pend())
+					);
 				})
 			)
 			.subscribe({
@@ -116,20 +125,12 @@ export class Dash {
 	}
 
 	openAddEmojiDialog(): void {
-		this.uploadDialog.show(this.curCat())
-			.pipe(
-				R.switchMap(_ => {
-					const catId = this.curCat().id;
-					return this.api.fetchAllEmojis(catId)
-						.pipe(
-							R.map(x => ActionResult.ready(x)),
-							R.startWith(ActionResult.pend())
-						);
-				})
-			)
-			.subscribe({
-				next: xs => this.emojis.set(xs),
-				error: e => this.alert.show(e)
-			});
+		const e$ = this.uploadDialog.show(this.curCat());
+		this.refreshEmojiListFrom(e$);
+	}
+
+	protected connectEmojiChange(event: { emoji: EmojiZ, desc: string | null }): void {
+		const update$ = this.api.editEmojiDesc(event.emoji.id, event.desc)
+		this.refreshEmojiListFrom(update$);
 	}
 }

@@ -1,7 +1,13 @@
-import { Component, input } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { EmojiZ } from '../api';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
+import { DescDialog } from './descdialog/descdialog';
+
+interface EmojiChangeEvent {
+	emoji: EmojiZ;
+	desc: string | null;
+}
 
 @Component({
 	selector: 'xg-emoji',
@@ -14,4 +20,12 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class Emoji {
 	emojis = input.required<Array<EmojiZ>>();
+	emojiChange = output<EmojiChangeEvent>();
+
+	private readonly descDialog = inject(DescDialog);
+
+	showDescEditor(emoji: EmojiZ): void {
+		this.descDialog.show(emoji.desc)
+			.subscribe(desc => this.emojiChange.emit({ emoji, desc }));
+	}
 }

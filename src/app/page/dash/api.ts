@@ -79,4 +79,16 @@ export class Api {
 		return this.http
 			.makePost("/self/emoji/create", emoji, emojiZ);
 	}
+
+	editEmojiDesc(emojiId: number, desc: string | null): Observable<EmojiZ> {
+		const body = {
+			id: emojiId,
+			data: {
+				desc
+			}
+		};
+
+		return this.http
+			.makePost("/self/emoji/update/desc", body, emojiZ);
+	}
 }

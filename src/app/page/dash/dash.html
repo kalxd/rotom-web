@@ -27,6 +27,8 @@
 @else {
 <xg-emoji
 	[emojis]="emojis().value"
+	[cats]="cats()"
+	[curCat]="curCat()"
 	(emojiChange)="connectEmojiChange($event)"
 	(emojiDelete)="connectEmojiDelete($event)"
 	/>

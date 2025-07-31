@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { AddCat } from './addcat/addcat';
 import * as R from "rxjs";
 import { Alert } from '../../widget/alert/alert';
-import { Emoji } from "./emoji/emoji";
+import { Emoji, EmojiChangeEvent } from "./emoji/emoji";
 import { toObservable } from '@angular/core/rxjs-interop';
 import { Load } from '../../widget/load/load';
 import { ActionResult } from '../../data/result';
@@ -134,8 +134,9 @@ export class Dash {
 		this.refreshEmojiListFrom(e$);
 	}
 
-	protected connectEmojiChange(event: { emoji: EmojiZ, desc: string | null }): void {
-		const update$ = this.api.editEmojiDesc(event.emoji.id, event.desc)
+	protected connectEmojiChange(event: EmojiChangeEvent): void {
+		const update$ = this.api
+			.updateEmoji(event.emoji.id, { desc: event.desc, catId: event.cat.id });
 		this.refreshEmojiListFrom(update$);
 	}
 

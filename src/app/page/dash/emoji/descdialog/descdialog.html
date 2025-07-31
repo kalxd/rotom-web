@@ -3,6 +3,16 @@
 <mat-dialog-content>
 	<p>
 		<mat-form-field>
+			<mat-label>分类</mat-label>
+			<mat-select [(ngModel)]="curCat">
+				@for (cat of data.cats; track $index) {
+				<mat-option [value]="cat">{{ cat.name }}</mat-option>
+				}
+			</mat-select>
+		</mat-form-field>
+	</p>
+	<p>
+		<mat-form-field>
 			<mat-label>描述</mat-label>
 			<input matInput [(ngModel)]="desc" />
 		</mat-form-field>
@@ -11,5 +21,5 @@
 
 <mat-dialog-actions>
 	<button matButton [mat-dialog-close]="null">不好</button>
-	<button matButton [mat-dialog-close]="desc()">好</button>
+	<button matButton (click)="connectOk()">好</button>
 </mat-dialog-actions>

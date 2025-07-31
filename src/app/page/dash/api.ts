@@ -41,6 +41,11 @@ interface AddEmojiOption {
 	desc: string | null;
 }
 
+interface UpdateEmojiOption {
+	catId: number | null;
+	desc: string | null;
+}
+
 @Injectable({
 	providedIn: 'root'
 })
@@ -84,16 +89,17 @@ export class Api {
 			.makePost("/self/emoji/create", emoji, emojiZ);
 	}
 
-	editEmojiDesc(emojiId: number, desc: string | null): Observable<EmojiZ> {
+	updateEmoji(emojiId: number, opt: UpdateEmojiOption): Observable<EmojiZ> {
 		const body = {
 			id: emojiId,
 			data: {
-				desc
+				desc: opt.desc,
+				catId: opt.catId
 			}
 		};
 
 		return this.http
-			.makePost("/self/emoji/update/desc", body, emojiZ);
+			.makePost("/self/emoji/update", body, emojiZ);
 	}
 
 	removeEmoji(emojiId: number): Observable<void> {

@@ -16,6 +16,11 @@
 <button matButton="outlined" (click)="openAddCat()">添加分类</button>
 <button matButton="outlined" (click)="openAddCatWith()">编辑分类</button>
 
+<div>
+	<input placeholder="搜索词" [(ngModel)]="searchWord" />
+	<button matButton (click)="connectSearch()">搜索</button>
+</div>
+
 @if (emojis().isPend()) {
 <xg-load />
 }

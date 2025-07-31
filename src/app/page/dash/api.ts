@@ -70,9 +70,13 @@ export class Api {
 			.makePost("/self/cat/update", data, catZ);
 	}
 
-	fetchAllEmojis(catId: number | null): Observable<Array<EmojiZ>> {
+	fetchAllEmojis(catId: number | null, searchWord: string | null): Observable<Array<EmojiZ>> {
+		const body = {
+			catId,
+			searchWord
+		};
 		return this.http
-			.makePost("/self/emoji/list", { catId }, emojiZ.array());
+			.makePost("/self/emoji/list", body, emojiZ.array());
 	}
 
 	addEmoji(emoji: AddEmojiOption): Observable<EmojiZ> {

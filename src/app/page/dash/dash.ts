@@ -13,6 +13,8 @@ import { toObservable } from '@angular/core/rxjs-interop';
 import { Load } from '../../widget/load/load';
 import { ActionResult } from '../../data/result';
 import { Upload } from './upload/upload';
+import { MatInputModule } from '@angular/material/input';
+import { emptyToNull } from '../../data/util';
 
 @Component({
 	selector: 'xg-dash',
@@ -23,6 +25,7 @@ import { Upload } from './upload/upload';
 		MatFormFieldModule,
 		MatSelectModule,
 		MatButton,
+		MatInputModule,
 
 		Load,
 		Emoji
@@ -38,9 +41,10 @@ export class Dash {
 
 	readonly cats: WritableSignal<Array<CatSelectItem>> = signal([]);
 	readonly curCat: WritableSignal<CatSelectItem>;
-	private readonly curCat$: R.Observable<CatSelectItem>;
 
 	readonly emojis: WritableSignal<ActionResult<Array<EmojiZ>>> = signal(ActionResult.pend());
+
+	protected readonly searchWord = signal("");
 
 	constructor() {
 		this.api.fetchAllCats()
@@ -60,20 +64,21 @@ export class Dash {
 			}
 		});
 
-		this.curCat$ = toObservable(this.curCat)
+		const curCat$ = toObservable(this.curCat)
 			.pipe(
 				R.distinctUntilKeyChanged('id')
 			);
 
-		this.refreshEmojiListFrom(this.curCat$);
+		this.refreshEmojiListFrom(curCat$);
 	}
 
 	private refreshEmojiListFrom(ob$: R.Observable<unknown>): void {
-		this.curCat$
+		ob$
 			.pipe(
-				R.sample(ob$),
-				R.switchMap(cat => {
-					return this.api.fetchAllEmojis(cat.id).pipe(
+				R.switchMap(_ => {
+					const searchWord = emptyToNull(this.searchWord());
+					const catId = this.curCat().id;
+					return this.api.fetchAllEmojis(catId, searchWord).pipe(
 						R.map(x => ActionResult.ready(x)),
 						R.startWith(ActionResult.pend())
 					);
@@ -137,5 +142,9 @@ export class Dash {
 	protected connectEmojiDelete(emoji: EmojiZ): void {
 		const api$ = this.api.removeEmoji(emoji.id);
 		this.refreshEmojiListFrom(api$);
+	}
+
+	protected connectSearch(): void {
+		this.refreshEmojiListFrom(R.of(1));
 	}
 }

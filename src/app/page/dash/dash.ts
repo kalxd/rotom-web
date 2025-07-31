@@ -69,11 +69,6 @@ export class Dash {
 	}
 
 	private refreshEmojiListFrom(ob$: R.Observable<unknown>): void {
-		const catId = this.curCat().id;
-
-		console.log("===");
-		console.log(catId);
-
 		this.curCat$
 			.pipe(
 				R.sample(ob$),

@@ -38,6 +38,7 @@ export class Dash {
 
 	readonly cats: WritableSignal<Array<CatSelectItem>> = signal([]);
 	readonly curCat: WritableSignal<CatSelectItem>;
+	private readonly curCat$: R.Observable<CatSelectItem>;
 
 	readonly emojis: WritableSignal<ActionResult<Array<EmojiZ>>> = signal(ActionResult.pend());
 
@@ -59,25 +60,29 @@ export class Dash {
 			}
 		});
 
-		const catChange$ = toObservable(this.curCat)
+		this.curCat$ = toObservable(this.curCat)
 			.pipe(
 				R.distinctUntilKeyChanged('id')
 			);
 
-		this.refreshEmojiListFrom(catChange$);
+		this.refreshEmojiListFrom(this.curCat$);
 	}
 
-	private refreshEmojiListFrom(ob: R.Observable<unknown>): void {
+	private refreshEmojiListFrom(ob$: R.Observable<unknown>): void {
 		const catId = this.curCat().id;
 
-		ob
+		console.log("===");
+		console.log(catId);
+
+		this.curCat$
 			.pipe(
-				R.switchMap(_ => {
-					return this.api.fetchAllEmojis(catId).pipe(
+				R.sample(ob$),
+				R.switchMap(cat => {
+					return this.api.fetchAllEmojis(cat.id).pipe(
 						R.map(x => ActionResult.ready(x)),
 						R.startWith(ActionResult.pend())
 					);
-				})
+				}),
 			)
 			.subscribe({
 				next: xs => this.emojis.set(xs),

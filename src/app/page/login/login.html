@@ -22,7 +22,7 @@
 			<p>
 				<mat-form-field appearance="outline">
 					<mat-label>密码</mat-label>
-					<input matInput formControlName="password" />
+					<input type="password" matInput formControlName="password" />
 					@if (loginForm.get("password"); as password) {
 					@if (password.invalid && password.dirty) {
 

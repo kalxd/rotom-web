@@ -6,7 +6,6 @@ import { Login} from "./page/login/login";
 import { Dash } from './page/dash/dash';
 import { UiTaskDirective, ActionResult } from 'drifloon';
 import * as R from "rxjs";
-import { toObservable } from '@angular/core/rxjs-interop';
 
 @Component({
 	selector: 'app-root',
@@ -23,18 +22,18 @@ import { toObservable } from '@angular/core/rxjs-interop';
 export class App {
 	private readonly http = inject(Http);
 	readonly session = inject(Session);
-	protected readonly curSession: R.Observable<ActionResult<string | undefined>>;
+	protected readonly curSession: R.Observable<ActionResult<boolean>>;
 
 	constructor() {
-		const session$ = toObservable(this.session.token);
-
 		this.curSession = this.http.initSession()
 			.pipe(
+				R.tap(session => {
+					if (session !== null) {
+						this.session.token.set(session.token);
+					}
+				}),
 				ActionResult.concatMap(session => {
-					return session$.pipe(
-						R.skip(1),
-						R.startWith(session?.token)
-					);
+					return R.of(session !== null);
 				})
 			);
 	}

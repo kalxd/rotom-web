@@ -5,13 +5,14 @@ import { Session } from './data/session';
 import { Load } from "./widget/load/load";
 import { Login} from "./page/login/login";
 import { Dash } from './page/dash/dash';
-import { ActionResult } from './data/result';
-import { Alert } from './widget/alert/alert';
+import { UiTaskDirective, ActionResult } from 'drifloon';
+import * as R from "rxjs";
 
 @Component({
 	selector: 'app-root',
 	imports: [
 		RouterOutlet,
+		UiTaskDirective,
 
 		Load,
 		Login,
@@ -23,21 +24,13 @@ import { Alert } from './widget/alert/alert';
 export class App {
 	private readonly http = inject(Http);
 	readonly session = inject(Session);
-	private readonly alert = inject(Alert);
-	protected readonly curSession: WritableSignal<ActionResult<unknown>>
-		= signal(ActionResult.pend());
+	protected readonly curSession: R.Observable<ActionResult<unknown>>;
 
 	constructor() {
-		this.http.initSession()
-			.subscribe({
-				next: session => {
-					if (session !== null) {
-						this.session.token.set(session.token);
-					}
-
-					this.curSession.set(ActionResult.ready(session));
-				},
-				error: e => this.alert.show(e)
-			});
+		this.curSession = this.http.initSession()
+			.pipe(
+				R.map(ActionResult.Ok),
+				R.startWith(ActionResult.Pend)
+			);
 	}
 }

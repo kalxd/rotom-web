@@ -1,14 +1,8 @@
-<main>
-	@if (curSession().isPend()) {
-	<xg-load />
-	}
-	@else {
-	@if (session.token()) {
-	<xg-dash />
+<main *task="let session from curSession">
+	@if (session) {
 	}
 	@else {
 	<xg-login />
-	}
 	}
 </main>
 

@@ -7,12 +7,15 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { LoginApi } from './api';
 import { Session } from '../../data/session';
-import { Alert } from '../../widget/alert/alert';
+import { UiContainer, UiForm, UiFormField } from 'drifloon';
 
 @Component({
 	selector: 'xg-login',
 	imports: [
 		ReactiveFormsModule,
+		UiContainer,
+		UiForm,
+		UiFormField,
 
 		MatToolbarModule,
 		MatCardModule,
@@ -27,14 +30,13 @@ export class Login {
 	private formBuilder = inject(FormBuilder);
 	private readonly loginApi = inject(LoginApi);
 	private session = inject(Session);
-	private alert = inject(Alert);
 
-	loginForm = this.formBuilder.group({
+	protected loginForm = this.formBuilder.group({
 		username: ["", Validators.required],
 		password: ["", Validators.required]
 	});
 
-	beginSubmitLoginForm(): void {
+	protected connectLogin(): void {
 		this.loginForm.markAllAsDirty();
 
 		if (this.loginForm.invalid) {
@@ -50,7 +52,6 @@ export class Login {
 				next: session => {
 					this.session.writeSession(session);
 				},
-				error: e => this.alert.show(e)
 			});
 	}
 }

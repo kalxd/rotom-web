@@ -1,43 +1,12 @@
-<mat-toolbar>
-	<span>请登录</span>
-</mat-toolbar>
+<ui-container>
+	<ui-form title="请登录" [formGroup]="loginForm">
+		<ui-form-field label="用户名">
+			<input formControlName="username" />
+		</ui-form-field>
+		<ui-form-field label="密码">
+			<input type="password" formControlName="password" />
+		</ui-form-field>
 
-<mat-card>
-	<mat-card-content>
-		<div [formGroup]="loginForm">
-			<p>
-				<mat-form-field appearance="outline">
-					<mat-label>用户名</mat-label>
-					<input matInput formControlName="username" />
-					@if (loginForm.get("username"); as username) {
-					@if (username.invalid && username.dirty) {
-					@if (username.hasError("required")) {
-					<mat-error>请填写用户名！</mat-error>
-					}
-					}
-					}
-				</mat-form-field>
-			</p>
-
-			<p>
-				<mat-form-field appearance="outline">
-					<mat-label>密码</mat-label>
-					<input type="password" matInput formControlName="password" />
-					@if (loginForm.get("password"); as password) {
-					@if (password.invalid && password.dirty) {
-
-					@if (password.hasError("required")) {
-					<mat-error>请填写密码！</mat-error>
-					}
-
-					}
-					}
-				</mat-form-field>
-			</p>
-		</div>
-	</mat-card-content>
-
-	<mat-card-actions>
-		<button matButton="elevated" (click)="beginSubmitLoginForm()">登录</button>
-	</mat-card-actions>
-</mat-card>
+		<button (click)="connectLogin()">登录</button>
+	</ui-form>
+</ui-container>

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import * as R from "rxjs";
@@ -11,6 +11,32 @@ const fixWithPrefix = (url: string): string => {
 	}
 	else {
 		return `_/${url}`;
+	}
+};
+
+const httpErrorZ = z.object({
+	msg: z.string()
+});
+
+const extractErrorMsg = (e: unknown): string => {
+	if (e instanceof HttpErrorResponse) {
+		const result = httpErrorZ.safeParse(e.error);
+
+		if (result.success) {
+			return result.data.msg;
+		}
+		else {
+			return result.error.message;
+		}
+	}
+	else if (e instanceof Error) {
+		return e.message;
+	}
+	else if (typeof e === "string") {
+		return e;
+	}
+	else {
+		return `${e}`;
 	}
 };
 
@@ -53,13 +79,27 @@ export class Http {
 	private makeGetFetch<R>(url: string, codec: z.ZodType<R>): Observable<R> {
 		const fixUrl = fixWithPrefix(url);
 		const opt = this.makeFetchOption();
-		return this.http.get(fixUrl, opt).pipe(R.map(x => codec.parse(x)));
+		return this.http.get(fixUrl, opt).pipe(
+			R.map(x => codec.parse(x)),
+			R.catchError(e => {
+				const msg = extractErrorMsg(e);
+				alert(msg);
+				return R.EMPTY;
+			})
+		);
 	}
 
 	private makePostFetch<T, R>(url: string, body: T | null, codec: z.ZodType<R>): Observable<R> {
 		const fixUrl = fixWithPrefix(url);
 		const opt = this.makeFetchOption()
-		return this.http.post(fixUrl, body, opt).pipe(R.map(x => codec.parse(x)));
+		return this.http.post(fixUrl, body, opt).pipe(
+			R.map(x => codec.parse(x)),
+			R.catchError(e => {
+				const msg = extractErrorMsg(e);
+				alert(msg);
+				return R.EMPTY;
+			})
+		);
 	}
 
 	makeGet<R>(url: string, codec: z.ZodType<R>): Observable<R> {

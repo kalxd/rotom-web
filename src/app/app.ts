@@ -7,6 +7,7 @@ import { Login} from "./page/login/login";
 import { Dash } from './page/dash/dash';
 import { UiTaskDirective, ActionResult } from 'drifloon';
 import * as R from "rxjs";
+import { toObservable } from '@angular/core/rxjs-interop';
 
 @Component({
 	selector: 'app-root',
@@ -24,13 +25,21 @@ import * as R from "rxjs";
 export class App {
 	private readonly http = inject(Http);
 	readonly session = inject(Session);
-	protected readonly curSession: R.Observable<ActionResult<unknown>>;
+	protected readonly curSession: R.Observable<ActionResult<string | undefined>>;
 
 	constructor() {
+		const session$ = toObservable(this.session.token);
+
 		this.curSession = this.http.initSession()
 			.pipe(
-				R.map(ActionResult.Ok),
-				R.startWith(ActionResult.Pend)
+				R.tap(session => {
+					if (session !== null) {
+						this.session.writeSession(session);
+					}
+				}),
+				ActionResult.concatMap(_ => {
+					return session$;
+				})
 			);
 	}
 }

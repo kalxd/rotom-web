@@ -2,7 +2,6 @@ import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Http } from './data/http';
 import { Session } from './data/session';
-import { Load } from "./widget/load/load";
 import { Login} from "./page/login/login";
 import { Dash } from './page/dash/dash';
 import { UiTaskDirective, ActionResult } from 'drifloon';
@@ -15,7 +14,6 @@ import { toObservable } from '@angular/core/rxjs-interop';
 		RouterOutlet,
 		UiTaskDirective,
 
-		Load,
 		Login,
 		Dash
 	],
@@ -37,8 +35,7 @@ export class App {
 						R.skip(1),
 						R.startWith(session?.token)
 					);
-				}),
-				R.tap(console.log)
+				})
 			);
 	}
 }

@@ -1,3 +1,29 @@
+import { Component, inject } from "@angular/core";
+import { DashState } from "./state/dash";
+import * as R from "rxjs";
+import { ActionResult, UiContainer, UiTaskDirective } from "drifloon";
+
+@Component({
+	selector: "xg-dash",
+	imports: [
+		UiContainer,
+		UiTaskDirective
+	],
+	templateUrl: "./dash.html"
+})
+export class Dash {
+	protected catState = inject(DashState);
+	protected cats$: R.Observable<ActionResult<void>>;
+
+	constructor() {
+		this.cats$ = this.catState.fetchCats().pipe(
+			R.map(_ => ActionResult.Ok(undefined)),
+			R.startWith(ActionResult.Pend)
+		);
+	}
+}
+
+/*
 import { Component, inject, linkedSignal, signal, WritableSignal } from '@angular/core';
 import { MatToolbar } from "@angular/material/toolbar";
 import { Api, CatSelectItem, catSelectItemDef, EmojiZ } from './api';
@@ -149,3 +175,4 @@ export class Dash {
 		this.refreshEmojiListFrom(R.of(1));
 	}
 }
+ */

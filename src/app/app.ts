@@ -32,14 +32,13 @@ export class App {
 
 		this.curSession = this.http.initSession()
 			.pipe(
-				R.tap(session => {
-					if (session !== null) {
-						this.session.writeSession(session);
-					}
+				ActionResult.concatMap(session => {
+					return session$.pipe(
+						R.skip(1),
+						R.startWith(session?.token)
+					);
 				}),
-				ActionResult.concatMap(_ => {
-					return session$;
-				})
+				R.tap(console.log)
 			);
 	}
 }

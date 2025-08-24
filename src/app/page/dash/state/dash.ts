@@ -38,15 +38,12 @@ export class DashState {
 				return nextCats.find(cat => cat.id === curCat.value?.id) ?? defCat;
 			}
 		});
-
-		console.log(this.curCat());
 	}
 
 	fetchCats(): R.Observable<Array<CatZ>> {
 		return this.http.makeGet("/self/cat/list", catZ.array()).pipe(
 			R.tap(cats => {
 				this.cats.set(cats);
-				console.log(this.curCat())
 			})
 		);
 	}

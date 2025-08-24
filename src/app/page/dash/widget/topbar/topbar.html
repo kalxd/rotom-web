@@ -1,1 +1,16 @@
-<p>topbar works!</p>
+<ui-topbar>
+	<ui-item [grow]="1">
+		<select [(ngModel)]="dashState.curCat">
+			@for (cat of dashState.cats(); track cat.id) {
+			<option [value]="cat">{{ cat.name }}（{{ cat.count }}）</option>
+			}
+		</select>
+		<button>添加分类</button>
+		<button>编辑分类</button>
+	</ui-item>
+	<ui-item>
+		<input placeholder="搜索当前表情" />
+		<button>搜索</button>
+		<button>添加表情</button>
+	</ui-item>
+</ui-topbar>

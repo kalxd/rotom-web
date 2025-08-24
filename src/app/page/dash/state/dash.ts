@@ -5,14 +5,16 @@ import { Http } from "../../../data/http";
 
 const catZ = z.object({
 	id: z.number().nullable(),
-	name: z.string()
+	name: z.string(),
+	count: z.number()
 });
 
 export type CatZ = z.infer<typeof catZ>;
 
 const defCat: CatZ = {
 	id: null,
-	name: "默认分类"
+	name: "默认分类",
+	count: 0
 };
 
 @Injectable({
@@ -32,15 +34,19 @@ export class DashState {
 					return defCat;
 				}
 
+				console.log(nextCats);
 				return nextCats.find(cat => cat.id === curCat.value?.id) ?? defCat;
 			}
 		});
+
+		console.log(this.curCat());
 	}
 
 	fetchCats(): R.Observable<Array<CatZ>> {
 		return this.http.makeGet("/self/cat/list", catZ.array()).pipe(
 			R.tap(cats => {
 				this.cats.set(cats);
+				console.log(this.curCat())
 			})
 		);
 	}

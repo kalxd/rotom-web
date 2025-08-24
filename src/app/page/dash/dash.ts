@@ -2,12 +2,15 @@ import { Component, inject } from "@angular/core";
 import { DashState } from "./state/dash";
 import * as R from "rxjs";
 import { ActionResult, UiContainer, UiTaskDirective } from "drifloon";
+import { Topbar } from "./widget/topbar/topbar";
 
 @Component({
 	selector: "xg-dash",
 	imports: [
 		UiContainer,
-		UiTaskDirective
+		UiTaskDirective,
+
+		Topbar
 	],
 	templateUrl: "./dash.html"
 })

@@ -1,7 +1,23 @@
 <ui-container>
 	<ng-container *task="let _a from isLoad$">
 		<ui-pager [pager]="emojiState.pager()" (pageChange)="connectPageChange($event)" />
-		hehe
-		{{ emojiState.pager().page}}
+
+		<div class="emoji container">
+			@for (emoji of emojiState.emojiPager().hits; track emoji.id) {
+			<div class="item">
+				<article>
+					@let img = "/_/file/view/" + emoji.fileSha;
+					<img class="image" [src]="img" />
+					<footer>{{ emoji.desc }}</footer>
+					<ui-box pad>
+						<button>编辑</button>
+						<button>删除</button>
+					</ui-box>
+				</article>
+			</div>
+			}
+		</div>
+
+		<ui-pager [pager]="emojiState.pager()" (pageChange)="connectPageChange($event)" />
 	</ng-container>
 </ui-container>

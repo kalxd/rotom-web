@@ -1,5 +1,11 @@
 import { Component, inject } from '@angular/core';
-import { ActionResult, UiContainer, UiTaskDirective, UiPager } from 'drifloon';
+import {
+	ActionResult,
+	UiContainer,
+	UiTaskDirective,
+	UiPager,
+	UiBox
+} from 'drifloon';
 import { EmojiState, SearchEmojiOption } from '../../state/emoji';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { CatState } from '../../state/cat';
@@ -10,8 +16,10 @@ import * as R from "rxjs";
 	imports: [
 		UiContainer,
 		UiTaskDirective,
-		UiPager
+		UiPager,
+		UiBox
 	],
+	styleUrl: "./emoji.scss",
 	templateUrl: './emoji.html',
 })
 export class Emoji {

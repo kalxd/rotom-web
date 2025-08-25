@@ -60,7 +60,7 @@ export class EmojiState {
 	);
 
 	page = signal(1);
-	size = signal(1);
+	size = signal(30);
 
 	pager = computed<UiPagerInput>(() => ({
 		page: this.page(),

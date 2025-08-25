@@ -5,5 +5,8 @@
 		</ui-form-field>
 	</ui-form>
 
-	<ui-dialog-box (cancel)="close()" (ok)="connectSubmit()" />
+	@if (isLoad()) {
+	<p>正在处理中</p>
+	}
+	<ui-dialog-box (cancel)="close()" (ok)="ok$.next()" />
 </ui-dialog>

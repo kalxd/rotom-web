@@ -24,6 +24,10 @@ export class CatDialog extends UiBaseDialog<CatZWithId | null, void> {
 	private cat = signal<CatZWithId | null>(null);
 	private catState = inject(CatState);
 
+	ok$ = new R.Subject<void>();
+
+	isLoad= signal(false);
+
 	fg = this.fb.nonNullable.group({
 		name: ["", Validators.required]
 	});
@@ -70,16 +74,25 @@ export class CatDialog extends UiBaseDialog<CatZWithId | null, void> {
 		return this.updateCat(curCat, value);
 	}
 
-	connectSubmit(): void {
-		this.fg.markAllAsDirty();
-		if (this.fg.invalid) {
-			return ;
-		}
+	constructor() {
+		super();
 
-		this.submitCat(this.fg.value as Required<typeof this.fg.value>)
+		this.ok$
 			.pipe(
-				R.concatMap(_ => this.catState.fetchCats())
+				R.tap(_ => this.isLoad.set(true)),
+				R.exhaustMap(_ => {
+					this.fg.markAllAsDirty();
+					if (this.fg.invalid) {
+						return R.EMPTY;
+					}
+
+					return this.submitCat(this.fg.value as Required<typeof this.fg.value>)
+						.pipe(
+							R.concatMap(_ => this.catState.fetchCats())
+						);
+				}),
+				R.finalize(() => this.isLoad.set(true))
 			)
-			.subscribe(_ => this.setFinalResult(undefined));
+			.subscribe(_ => this.setFinalResult())
 	}
 }

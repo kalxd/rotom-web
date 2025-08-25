@@ -1,8 +1,9 @@
-import { computed, inject, Injectable, Signal, signal } from "@angular/core";
+import { computed, inject, Injectable, signal } from "@angular/core";
 import { z } from "zod";
 import * as R from "rxjs";
 import { Http } from "../../../data/http";
 import { toObservable } from "@angular/core/rxjs-interop";
+import { UiPagerInput } from "drifloon";
 
 const emojiZ = z.object({
 	id: z.number(),
@@ -61,7 +62,7 @@ export class EmojiState {
 	page = signal(1);
 	size = signal(1);
 
-	pager: Signal<{ page: number; size: number, count: number }> = computed(() => ({
+	pager = computed<UiPagerInput>(() => ({
 		page: this.page(),
 		size: this.size(),
 		count: this.emojiPager().count

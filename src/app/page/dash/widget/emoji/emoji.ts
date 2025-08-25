@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { ActionResult, UiContainer, UiPager, UiTaskDirective } from 'drifloon';
+import { ActionResult, UiContainer, UiTaskDirective, UiPager } from 'drifloon';
 import { EmojiState, SearchEmojiOption } from '../../state/emoji';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { CatState } from '../../state/cat';

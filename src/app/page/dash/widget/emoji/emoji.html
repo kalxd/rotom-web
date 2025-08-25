@@ -2,5 +2,6 @@
 	<ng-container *task="let _a from isLoad$">
 		<ui-pager [pager]="emojiState.pager()" (pageChange)="connectPageChange($event)" />
 		hehe
+		{{ emojiState.pager().page}}
 	</ng-container>
 </ui-container>

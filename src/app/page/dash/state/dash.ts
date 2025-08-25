@@ -11,17 +11,11 @@ const catZ = z.object({
 
 export type CatZ = z.infer<typeof catZ>;
 
-const defCat: CatZ = {
-	id: null,
-	name: "默认分类",
-	count: 0
-};
-
 @Injectable({
 	providedIn: "root"
 })
 export class DashState {
-	cats: WritableSignal<Array<CatZ>> = signal([defCat]);
+	cats: WritableSignal<Array<CatZ>> = signal([]);
 	curCat: WritableSignal<CatZ>;
 
 	private http = inject(Http);
@@ -31,11 +25,10 @@ export class DashState {
 			source: this.cats,
 			computation: (nextCats, curCat) => {
 				if (curCat === undefined) {
-					return defCat;
+					return nextCats[0];
 				}
 
-				console.log(nextCats);
-				return nextCats.find(cat => cat.id === curCat.value?.id) ?? defCat;
+				return nextCats.find(cat => cat.id === curCat.value?.id) ?? nextCats[0];
 			}
 		});
 	}

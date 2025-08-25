@@ -1,18 +1,25 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, viewChild } from '@angular/core';
 import { UiItem, UiTopbar } from 'drifloon';
-import { DashState } from '../../state/dash';
+import { CatZ, DashState } from '../../state/dash';
 import { FormsModule } from '@angular/forms';
+import { CatDialog } from "./catdialog";
 
 @Component({
 	selector: 'xg-topbar',
 	imports: [
 		UiTopbar,
 		UiItem,
-		FormsModule
+		FormsModule,
+		CatDialog
 	],
-	templateUrl: './topbar.html',
-	styleUrl: './topbar.scss'
+	templateUrl: './topbar.html'
 })
 export class Topbar {
 	dashState = inject(DashState);
+
+	catDialog = viewChild.required(CatDialog);
+
+	connectEditCat(): void {
+		console.log(this.dashState.curCat());
+	}
 }

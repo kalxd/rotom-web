@@ -1,44 +1,4 @@
 <ng-container *task="let task from cats$">
 	<xg-topbar />
-	<ui-container>
-		yes
-	</ui-container>
+	<xg-emoji />
 </ng-container>
-
-<!--
-<mat-toolbar>
-	你好啊
-</mat-toolbar>
-
-<button matButton="filled" (click)="openAddEmojiDialog()">添加表情</button>
-
-<mat-form-field>
-	<mat-label>表情分类</mat-label>
-	<mat-select [(ngModel)]="curCat">
-		@for (cat of cats(); track $index) {
-		<mat-option [value]="cat">{{ cat.name }}</mat-option>
-		}
-	</mat-select>
-</mat-form-field>
-
-<button matButton="outlined" (click)="openAddCat()">添加分类</button>
-<button matButton="outlined" (click)="openAddCatWith()">编辑分类</button>
-
-<div>
-	<input placeholder="搜索词" [(ngModel)]="searchWord" />
-	<button matButton (click)="connectSearch()">搜索</button>
-</div>
-
-@if (emojis().isPend()) {
-<xg-load />
-}
-@else {
-<xg-emoji
-	[emojis]="emojis().value"
-	[cats]="cats()"
-	[curCat]="curCat()"
-	(emojiChange)="connectEmojiChange($event)"
-	(emojiDelete)="connectEmojiDelete($event)"
-	/>
-}
--->

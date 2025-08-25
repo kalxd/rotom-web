@@ -1,8 +1,8 @@
 import { computed, inject, Injectable, Signal, signal } from "@angular/core";
 import { z } from "zod";
-import { CatState } from "./cat";
 import * as R from "rxjs";
 import { Http } from "../../../data/http";
+import { toObservable } from "@angular/core/rxjs-interop";
 
 const emojiZ = z.object({
 	id: z.number(),
@@ -16,7 +16,7 @@ interface PagerResult<T> {
 	hits: Array<T>;
 }
 
-const pagerResult = <T>(data: z.ZodType<T>) => {
+const pagerResult = <T>(data: z.ZodType<T>): z.ZodType<PagerResult<T>> => {
 	return z.object({
 		count: z.number(),
 		hits: data.array()
@@ -25,30 +25,62 @@ const pagerResult = <T>(data: z.ZodType<T>) => {
 
 export type EmojiZ = z.infer<typeof emojiZ>;
 
+export interface SearchEmojiOption {
+	catId: number | null;
+	searchWord: string | null;
+	page: number;
+}
+
 @Injectable({
 	providedIn: "root"
 })
 export class EmojiState {
-	private catState = inject(CatState);
 	private http = inject(Http);
 
-	emojis = signal<Array<EmojiZ>>([]);
+	emojiPager = signal<PagerResult<EmojiZ>>({
+		count: 0,
+		hits: []
+	});
 
 	searchWord = signal("");
-	page = signal(1);
+	searchClick = new R.Subject<void>();
 
-	pager: Signal<{ page: number; size: number }> = computed(() => ({
+	searchWord$: R.Observable<string | null> = toObservable(this.searchWord).pipe(
+		R.sample(this.searchClick.asObservable()),
+		R.debounceTime(200),
+		R.map(word => {
+			const s = word.trim();
+			if (s.length === 0) {
+				return null;
+			}
+			return s;
+		}),
+		R.startWith<string | null>(null)
+	);
+
+	page = signal(1);
+	size = signal(1);
+
+	pager: Signal<{ page: number; size: number, count: number }> = computed(() => ({
 		page: this.page(),
-		size: 10
+		size: this.size(),
+		count: this.emojiPager().count
 	}));
 
-	fetchCurEmojis(): R.Observable<PagerResult<EmojiZ>> {
+	fetchEmojis(option: SearchEmojiOption): R.Observable<PagerResult<EmojiZ>> {
 		const body = {
-			pager: this.pager(),
-			catId: this.catState.curCat().id,
-			searchWord: this.searchWord() ?? null
+			catId: option.catId,
+			searchWord: option.searchWord,
+			pager: {
+				page: option.page,
+				size: this.size()
+			}
 		};
 
-		return this.http.makePost("/self/emoji/list", body, pagerResult(emojiZ));
+		return this.http
+			.makePost("/self/emoji/list", body, pagerResult(emojiZ))
+			.pipe(
+				R.tap(pager => this.emojiPager.set(pager))
+			);
 	}
 }

@@ -3,6 +3,7 @@ import { UiItem, UiTopbar } from 'drifloon';
 import { CatState } from '../../state/cat';
 import { FormsModule } from '@angular/forms';
 import { CatDialog, CatZWithId } from "./catdialog";
+import { EmojiState } from '../../state/emoji';
 
 @Component({
 	selector: 'xg-topbar',
@@ -16,6 +17,7 @@ import { CatDialog, CatZWithId } from "./catdialog";
 })
 export class Topbar {
 	catState = inject(CatState);
+	emojiState = inject(EmojiState);
 
 	catDialog = viewChild.required(CatDialog);
 

@@ -11,8 +11,9 @@
 	<ui-item>
 		<input placeholder="搜索当前表情" [(ngModel)]="emojiState.searchWord" />
 		<button (click)="emojiState.searchClick.next()">搜索</button>
-		<button>添加表情</button>
+		<button (click)="addDialog().show()">添加表情</button>
 	</ui-item>
 </ui-topbar>
 
 <xg-cat-dialog />
+<xg-add-dialog />

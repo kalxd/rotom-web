@@ -43,7 +43,6 @@ export class Emoji {
 					searchWord
 				};
 
-				console.log(this.emojiState.pager());
 				return this.emojiState.fetchEmojis(body);
 			}));
 	}

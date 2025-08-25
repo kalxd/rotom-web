@@ -1,0 +1,20 @@
+<ui-dialog>
+	<ui-topbar>
+		添加新表情
+	</ui-topbar>
+
+	<ui-form [formGroup]="fg">
+		<ui-form-field label="表情文件">
+			<input #file type="file" (change)="connectFileChange($event)" />
+		</ui-form-field>
+		<ui-form-field label="表情描述">
+			<textarea rows="2" formControlName="desc"></textarea>
+		</ui-form-field>
+	</ui-form>
+
+	@if (isLoad()) {
+	<p>正在提交……</p>
+	}
+
+	<ui-dialog-box (cancel)="close()" (ok)="connectSubmit()" />
+</ui-dialog>

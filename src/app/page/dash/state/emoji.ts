@@ -4,6 +4,7 @@ import * as R from "rxjs";
 import { Http } from "../../../data/http";
 import { toObservable } from "@angular/core/rxjs-interop";
 import { UiPagerInput } from "drifloon";
+import { CatState } from "./cat";
 
 const emojiZ = z.object({
 	id: z.number(),
@@ -32,11 +33,27 @@ export interface SearchEmojiOption {
 	page: number;
 }
 
+export interface AddEmojiOption {
+	fileSha: string;
+	catId: number | null;
+	desc: string | null
+}
+
+const trimSearchWork = (input: string): string | null => {
+	const s = input.trim();
+	if (s.length === 0) {
+		return null;
+	}
+
+	return s;
+};
+
 @Injectable({
 	providedIn: "root"
 })
 export class EmojiState {
 	private http = inject(Http);
+	private catState = inject(CatState);
 
 	emojiPager = signal<PagerResult<EmojiZ>>({
 		count: 0,
@@ -49,13 +66,7 @@ export class EmojiState {
 	searchWord$: R.Observable<string | null> = toObservable(this.searchWord).pipe(
 		R.sample(this.searchClick.asObservable()),
 		R.debounceTime(200),
-		R.map(word => {
-			const s = word.trim();
-			if (s.length === 0) {
-				return null;
-			}
-			return s;
-		}),
+		R.map(trimSearchWork),
 		R.startWith<string | null>(null)
 	);
 
@@ -83,5 +94,19 @@ export class EmojiState {
 			.pipe(
 				R.tap(pager => this.emojiPager.set(pager))
 			);
+	}
+
+	refreshEmojis(): R.Observable<PagerResult<EmojiZ>> {
+		const option: SearchEmojiOption = {
+			catId: this.catState.curCat().id,
+			page: this.page(),
+			searchWord: trimSearchWork(this.searchWord())
+		};
+
+		return this.fetchEmojis(option);
+	}
+
+	addEmoji(body: AddEmojiOption): R.Observable<EmojiZ> {
+		return this.http.makePost("/self/emoji/create", body, emojiZ);
 	}
 }

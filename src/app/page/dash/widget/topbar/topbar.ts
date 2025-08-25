@@ -3,6 +3,7 @@ import { UiItem, UiTopbar } from 'drifloon';
 import { CatState } from '../../state/cat';
 import { FormsModule } from '@angular/forms';
 import { CatDialog, CatZWithId } from "./catdialog";
+import { AddDialog } from "./addedialog";
 import { EmojiState } from '../../state/emoji';
 
 @Component({
@@ -11,7 +12,8 @@ import { EmojiState } from '../../state/emoji';
 		UiTopbar,
 		UiItem,
 		FormsModule,
-		CatDialog
+		CatDialog,
+		AddDialog
 	],
 	templateUrl: './topbar.html'
 })
@@ -20,6 +22,7 @@ export class Topbar {
 	emojiState = inject(EmojiState);
 
 	catDialog = viewChild.required(CatDialog);
+	addDialog = viewChild.required(AddDialog);
 
 	connectEditCat(): void {
 		const curCat = this.catState.curCat();
@@ -28,6 +31,5 @@ export class Topbar {
 		}
 
 		this.catDialog().show(curCat as CatZWithId);
-		console.log(this.catState.curCat());
 	}
 }

@@ -11,10 +11,17 @@ const catZ = z.object({
 
 export type CatZ = z.infer<typeof catZ>;
 
+export interface UpdateCatOption {
+	id: number;
+	data: {
+		name: string;
+	}
+}
+
 @Injectable({
 	providedIn: "root"
 })
-export class DashState {
+export class CatState {
 	cats: WritableSignal<Array<CatZ>> = signal([]);
 	curCat: WritableSignal<CatZ>;
 
@@ -39,5 +46,17 @@ export class DashState {
 				this.cats.set(cats);
 			})
 		);
+	}
+
+	addCat(name: string): R.Observable<CatZ> {
+		const body = {
+			name
+		};
+
+		return this.http.makePost("/self/cat/create", body, catZ);
+	}
+
+	updateCat(data: UpdateCatOption): R.Observable<CatZ> {
+		return this.http.makePost("/self/cat/update", data, catZ);
 	}
 }

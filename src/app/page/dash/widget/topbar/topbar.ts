@@ -1,8 +1,8 @@
 import { Component, inject, viewChild } from '@angular/core';
 import { UiItem, UiTopbar } from 'drifloon';
-import { CatZ, DashState } from '../../state/dash';
+import { CatState } from '../../state/cat';
 import { FormsModule } from '@angular/forms';
-import { CatDialog } from "./catdialog";
+import { CatDialog, CatZWithId } from "./catdialog";
 
 @Component({
 	selector: 'xg-topbar',
@@ -15,11 +15,17 @@ import { CatDialog } from "./catdialog";
 	templateUrl: './topbar.html'
 })
 export class Topbar {
-	dashState = inject(DashState);
+	catState = inject(CatState);
 
 	catDialog = viewChild.required(CatDialog);
 
 	connectEditCat(): void {
-		console.log(this.dashState.curCat());
+		const curCat = this.catState.curCat();
+		if (curCat.id === null) {
+			return alert("无法编辑默认分类！");
+		}
+
+		this.catDialog().show(curCat as CatZWithId);
+		console.log(this.catState.curCat());
 	}
 }

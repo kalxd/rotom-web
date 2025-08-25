@@ -1,11 +1,11 @@
 <ui-topbar>
 	<ui-item [grow]="1">
-		<select [(ngModel)]="dashState.curCat">
-			@for (cat of dashState.cats(); track cat.id) {
+		<select [(ngModel)]="catState.curCat">
+			@for (cat of catState.cats(); track cat.id) {
 			<option [ngValue]="cat">{{ cat.name }}（{{ cat.count }}）</option>
 			}
 		</select>
-		<button (click)="catDialog().show(undefined)">添加分类</button>
+		<button (click)="catDialog().show(null)">添加分类</button>
 		<button (click)="connectEditCat()">编辑分类</button>
 	</ui-item>
 	<ui-item>

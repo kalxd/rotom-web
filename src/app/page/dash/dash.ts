@@ -1,5 +1,5 @@
 import { Component, inject } from "@angular/core";
-import { DashState } from "./state/dash";
+import { CatState } from "./state/cat";
 import * as R from "rxjs";
 import { ActionResult, UiContainer, UiTaskDirective } from "drifloon";
 import { Topbar } from "./widget/topbar/topbar";
@@ -15,7 +15,7 @@ import { Topbar } from "./widget/topbar/topbar";
 	templateUrl: "./dash.html"
 })
 export class Dash {
-	protected catState = inject(DashState);
+	protected catState = inject(CatState);
 	protected cats$: R.Observable<ActionResult<void>>;
 
 	constructor() {

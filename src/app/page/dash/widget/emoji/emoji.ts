@@ -21,7 +21,7 @@ import { EditDialog } from './editdialog';
 		UiBox,
 		EditDialog
 	],
-	styleUrl: "./emoji.scss",
+	styleUrl: "./emoji.css",
 	templateUrl: './emoji.html',
 })
 export class Emoji {

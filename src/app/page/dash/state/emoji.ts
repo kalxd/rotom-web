@@ -1,10 +1,10 @@
-import { computed, inject, Injectable, signal } from "@angular/core";
+import { computed, inject, Injectable, linkedSignal, signal } from "@angular/core";
 import { z } from "zod";
 import * as R from "rxjs";
 import { Http } from "../../../data/http";
 import { toObservable } from "@angular/core/rxjs-interop";
 import { UiPagerInput } from "drifloon";
-import { CatState } from "./cat";
+import { CatState, CatZ } from "./cat";
 
 const emojiZ = z.object({
 	id: z.number(),
@@ -75,8 +75,14 @@ export class EmojiState {
 		R.startWith<string | null>(null)
 	);
 
-	page = signal(1);
-	size = signal(30);
+	page = linkedSignal<CatZ, number>({
+		source: this.catState.curCat,
+		computation: (_, __) => {
+			return 1;
+		}
+	});
+
+	size = signal(12);
 
 	pager = computed<UiPagerInput>(() => ({
 		page: this.page(),

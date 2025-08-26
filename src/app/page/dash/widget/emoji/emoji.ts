@@ -58,4 +58,21 @@ export class Emoji {
 	connectEditEmoji(emoji: EmojiZ): void {
 		this.editDialog().show(emoji);
 	}
+
+	connectRemoveEmoji(emoji: EmojiZ): void {
+		if (!confirm("确认删除这个表情吗？")) {
+			return ;
+		}
+
+		this.emojiState.removeEmoji(emoji.id)
+			.pipe(
+				R.exhaustMap(_ => {
+					return R.combineLatest([
+						this.emojiState.refreshEmojis(),
+						this.catState.fetchCats()
+					]);
+				})
+			)
+			.subscribe(_ => {});
+	}
 }

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, viewChild } from '@angular/core';
 import {
 	ActionResult,
 	UiContainer,
@@ -6,10 +6,11 @@ import {
 	UiPager,
 	UiBox
 } from 'drifloon';
-import { EmojiState, SearchEmojiOption } from '../../state/emoji';
+import { EmojiState, EmojiZ, SearchEmojiOption } from '../../state/emoji';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { CatState } from '../../state/cat';
 import * as R from "rxjs";
+import { EditDialog } from './editdialog';
 
 @Component({
 	selector: 'xg-emoji',
@@ -17,13 +18,16 @@ import * as R from "rxjs";
 		UiContainer,
 		UiTaskDirective,
 		UiPager,
-		UiBox
+		UiBox,
+		EditDialog
 	],
 	styleUrl: "./emoji.scss",
 	templateUrl: './emoji.html',
 })
 export class Emoji {
 	private catState = inject(CatState);
+	private editDialog = viewChild.required(EditDialog);
+
 	emojiState = inject(EmojiState);
 
 	isLoad$: R.Observable<ActionResult<unknown>>;
@@ -49,5 +53,9 @@ export class Emoji {
 
 	connectPageChange(page: number): void {
 		this.emojiState.page.set(page);
+	}
+
+	connectEditEmoji(emoji: EmojiZ): void {
+		this.editDialog().show(emoji);
 	}
 }

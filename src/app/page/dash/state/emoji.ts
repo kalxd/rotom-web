@@ -39,6 +39,11 @@ export interface AddEmojiOption {
 	desc: string | null
 }
 
+export interface UpdateEmojiOption {
+	catId: number | null;
+	desc: string | null;
+}
+
 const trimSearchWork = (input: string): string | null => {
 	const s = input.trim();
 	if (s.length === 0) {
@@ -108,5 +113,25 @@ export class EmojiState {
 
 	addEmoji(body: AddEmojiOption): R.Observable<EmojiZ> {
 		return this.http.makePost("/self/emoji/create", body, emojiZ);
+	}
+
+	updateEmoji(emoji: EmojiZ, option: UpdateEmojiOption): R.Observable<EmojiZ> {
+		const body = {
+			id: emoji.id,
+			data: {
+				desc: option.desc,
+				catId: option.catId
+			}
+		};
+
+		return this.http.makePost("/self/emoji/update", body, emojiZ);
+	}
+
+	removeEmoji(emojiId: number): R.Observable<void> {
+		const body = {
+			id: emojiId
+		};
+
+		return this.http.makePost("/self/emoji/delete", body, z.any());
 	}
 }

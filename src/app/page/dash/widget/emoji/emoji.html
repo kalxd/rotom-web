@@ -10,7 +10,7 @@
 					<img class="image" [src]="img" />
 					<footer>{{ emoji.desc }}</footer>
 					<ui-box pad>
-						<button>编辑</button>
+						<button (click)="connectEditEmoji(emoji)">编辑</button>
 						<button>删除</button>
 					</ui-box>
 				</article>
@@ -21,3 +21,5 @@
 		<ui-pager [pager]="emojiState.pager()" (pageChange)="connectPageChange($event)" />
 	</ng-container>
 </ui-container>
+
+<xg-edit-dialog />

@@ -1,0 +1,13 @@
+<ui-dialog>
+	<ui-form title="编辑表情" [formGroup]="fg">
+		<ui-form-field label="描述">
+			<input formControlName="desc" />
+		</ui-form-field>
+	</ui-form>
+
+	@if (isLoad()) {
+	<p>正在提交……</p>
+	}
+
+	<ui-dialog-box (cancel)="close()" (ok)="connectSubmit()" />
+</ui-dialog>

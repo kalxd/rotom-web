@@ -24,6 +24,10 @@ export class Topbar {
 	catDialog = viewChild.required(CatDialog);
 	addDialog = viewChild.required(AddDialog);
 
+	connectCatChange(): void {
+		this.emojiState.page.set(1);
+	}
+
 	connectEditCat(): void {
 		const curCat = this.catState.curCat();
 		if (curCat.id === null) {

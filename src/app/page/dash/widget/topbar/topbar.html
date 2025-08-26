@@ -1,6 +1,6 @@
 <ui-topbar>
 	<ui-item [grow]="1">
-		<select [(ngModel)]="catState.curCat">
+		<select [(ngModel)]="catState.curCat" (change)="connectCatChange()">
 			@for (cat of catState.cats(); track cat.id) {
 			<option [ngValue]="cat">{{ cat.name }}（{{ cat.count }}）</option>
 			}

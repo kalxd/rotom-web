@@ -1,5 +1,13 @@
 <ui-dialog>
 	<ui-form title="编辑表情" [formGroup]="fg">
+		<ui-form-field label="分类">
+			<select formControlName="cat">
+				@for (cat of this.catState.cats(); track cat.id) {
+				<option [ngValue]="cat">{{ cat.name }}（{{ cat.count }}）</option>
+				}
+			</select>
+		</ui-form-field>
+
 		<ui-form-field label="描述">
 			<input formControlName="desc" />
 		</ui-form-field>

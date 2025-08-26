@@ -1,7 +1,9 @@
-import { Component, signal } from "@angular/core";
+import { Component, inject, signal } from "@angular/core";
 import { UiBaseDialog, UiDialog, UiDialogBox, UiForm, UiFormField } from "drifloon";
-import { EmojiZ } from "../../state/emoji";
+import { EmojiState, EmojiZ } from "../../state/emoji";
 import { ReactiveFormsModule } from "@angular/forms";
+import { CatState } from "../../state/cat";
+import * as R from "rxjs";
 
 const trimDesc = (s: string | null): string | null => {
 	if (s === null) {
@@ -28,17 +30,44 @@ const trimDesc = (s: string | null): string | null => {
 	]
 })
 export class EditDialog extends UiBaseDialog<EmojiZ, void> {
-	isLoad = signal(false);
+	catState = inject(CatState);
+	emojiState = inject(EmojiState);
 
-	fg = this.fb.group({
-		desc: [""]
+	isLoad = signal(false);
+	emoji = signal<EmojiZ | null>(null);
+
+	fg = this.fb.nonNullable.group({
+		cat: [this.catState.curCat()],
+		desc: [""],
 	});
 
 	override updateInput(emoji: EmojiZ): void {
-		this.fg.controls.desc.setValue(emoji.desc);
+		this.fg.controls.cat.setValue(this.catState.curCat());
+		this.fg.controls.desc.setValue(emoji.desc ?? "");
+		this.emoji.set(emoji);
 	}
 
 	connectSubmit(): void {
+		const emoji = this.emoji();
+		if (emoji === null) {
+			return ;
+		}
+
 		const desc = trimDesc(this.fg.controls.desc.value);
+		const cat = this.fg.controls.cat.value;
+
+		this.isLoad.set(true);
+
+		this.emojiState.updateEmoji(emoji, { desc, catId: cat.id })
+			.pipe(
+				R.concatMap(_ => {
+					return R.combineLatest([
+						this.emojiState.refreshEmojis(),
+						this.catState.fetchCats()
+					]);
+				}),
+				R.finalize(() => this.isLoad.set(false))
+			)
+			.subscribe(_ => this.setFinalResult());
 	}
 }

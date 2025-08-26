@@ -68,16 +68,16 @@ export class EmojiState {
 	searchWord = signal("");
 	searchClick = new R.Subject<void>();
 
+	page = signal(1);
+	size = signal(12);
+
 	searchWord$: R.Observable<string | null> = toObservable(this.searchWord).pipe(
 		R.sample(this.searchClick.asObservable()),
 		R.debounceTime(200),
 		R.map(trimSearchWork),
+		R.tap(() => this.page.set(1)),
 		R.startWith<string | null>(null)
 	);
-
-	page = signal(1);
-
-	size = signal(2);
 
 	pager = computed<UiPagerInput>(() => ({
 		page: this.page(),

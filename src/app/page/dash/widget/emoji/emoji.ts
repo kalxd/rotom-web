@@ -40,15 +40,18 @@ export class Emoji {
 			.pipe(R.distinctUntilKeyChanged("id"));
 
 		this.isLoad$ = R.combineLatest([ page$, cat$, this.emojiState.searchWord$ ])
-			.pipe(ActionResult.concatMap(([page, cat, searchWord]) => {
-				const body: SearchEmojiOption = {
-					page,
-					catId: cat.id,
-					searchWord
-				};
+			.pipe(
+				R.auditTime(50),
+				ActionResult.concatMap(([page, cat, searchWord]) => {
+					const body: SearchEmojiOption = {
+						page,
+						catId: cat.id,
+						searchWord
+					};
 
-				return this.emojiState.fetchEmojis(body);
-			}));
+					return this.emojiState.fetchEmojis(body);
+				})
+			);
 	}
 
 	connectPageChange(page: number): void {

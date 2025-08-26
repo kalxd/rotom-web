@@ -77,7 +77,12 @@ export class AddDialog extends UiBaseDialog<void, void> {
 						desc: trimStr(this.fg.value.desc)
 					};
 					return this.emojiState.addEmoji(option).pipe(
-						R.concatMap(_ => this.emojiState.refreshEmojis())
+						R.concatMap(_ => {
+							return R.combineLatest([
+								this.emojiState.refreshEmojis(),
+								this.catState.fetchCats()
+							]);
+						})
 					);
 				}),
 				R.finalize(() => this.isLoad.set(false))

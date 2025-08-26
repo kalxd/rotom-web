@@ -11,7 +11,6 @@ const httpErrorZ = z.object({
 const extractErrorMsg = (e: unknown): string => {
 	if (e instanceof HttpErrorResponse) {
 		const result = httpErrorZ.safeParse(e.error);
-		console.log(result);
 
 		if (result.success) {
 			return result.data.msg;

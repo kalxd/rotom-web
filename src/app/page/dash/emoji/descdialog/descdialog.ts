@@ -47,7 +47,6 @@ class DescDialogImpl {
 			desc: this.desc()
 		};
 
-		console.log(data);
 		this.selfRef.close(data);
 	}
 }

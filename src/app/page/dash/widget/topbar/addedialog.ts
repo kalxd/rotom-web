@@ -43,7 +43,7 @@ export class AddDialog extends UiBaseDialog<void, void> {
 		desc: [""]
 	});
 
-	override updateInput(_: void): void {
+	override init(_: void): void {
 		this.file.set(null);
 		this.fg.controls.desc.setValue("");
 		this.inputEl().nativeElement.value = "";

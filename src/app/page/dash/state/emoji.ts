@@ -3,7 +3,7 @@ import { z } from "zod";
 import * as R from "rxjs";
 import { Http } from "../../../data/http";
 import { toObservable } from "@angular/core/rxjs-interop";
-import { UiPagerInput } from "drifloon";
+import { PagerInput } from "drifloon";
 import { CatState } from "./cat";
 
 const emojiZ = z.object({
@@ -79,7 +79,7 @@ export class EmojiState {
 		R.startWith<string | null>(null)
 	);
 
-	pager = computed<UiPagerInput>(() => ({
+	pager = computed<PagerInput>(() => ({
 		page: this.page(),
 		size: this.size(),
 		count: this.emojiPager().count

@@ -32,7 +32,7 @@ export class CatDialog extends UiBaseDialog<CatZWithId | null, void> {
 		name: ["", Validators.required]
 	});
 
-	override updateInput(value: CatZWithId | null): void {
+	override init(value: CatZWithId | null): void {
 		this.cat.set(value);
 		if (value === null) {
 			this.fg.reset();

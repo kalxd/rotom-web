@@ -41,7 +41,7 @@ export class EditDialog extends UiBaseDialog<EmojiZ, void> {
 		desc: [""],
 	});
 
-	override updateInput(emoji: EmojiZ): void {
+	override init(emoji: EmojiZ): void {
 		this.fg.controls.cat.setValue(this.catState.curCat());
 		this.fg.controls.desc.setValue(emoji.desc ?? "");
 		this.emoji.set(emoji);

@@ -41,7 +41,7 @@ export interface AddEmojiOption {
 
 export interface UpdateEmojiOption {
 	catId: number | null;
-	desc: string | null;
+	desc?: string;
 }
 
 const trimSearchWork = (input: string): string | null => {

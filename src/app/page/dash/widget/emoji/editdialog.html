@@ -1,21 +1,13 @@
-<ui-dialog>
-	<ui-form title="编辑表情" [formGroup]="fg">
-		<ui-form-field label="分类">
-			<select formControlName="cat">
-				@for (cat of this.catState.cats(); track cat.id) {
-				<option [ngValue]="cat">{{ cat.name }}（{{ cat.count }}）</option>
-				}
-			</select>
-		</ui-form-field>
+<ui-form-dialog title="编辑表情" [formGroup]="fg" (submit)="connectSubmit()">
+	<ui-form-field label="分类">
+		<select formControlName="cat">
+			@for (cat of this.catState.cats(); track cat.id) {
+			<option [ngValue]="cat">{{ cat.name }}（{{ cat.count }}）</option>
+			}
+		</select>
+	</ui-form-field>
 
-		<ui-form-field label="描述">
-			<textarea rows="2" formControlName="desc"></textarea>
-		</ui-form-field>
-	</ui-form>
-
-	@if (isLoad()) {
-	<p>正在提交……</p>
-	}
-
-	<ui-dialog-box (cancel)="close()" (ok)="connectSubmit()" />
-</ui-dialog>
+	<ui-form-field label="描述">
+		<textarea rows="2" formControlName="desc"></textarea>
+	</ui-form-field>
+</ui-form-dialog>

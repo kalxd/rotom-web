@@ -1,35 +1,25 @@
 import { Component, inject, signal } from "@angular/core";
-import { UiBaseDialog, UiDialog, UiDialogBox, UiForm, UiFormField } from "drifloon";
+import {
+	emptyStrToUndefined,
+	UiBaseFormDialog,
+	UiFormDialog,
+	UiFormField
+} from "drifloon";
 import { EmojiState, EmojiZ } from "../../state/emoji";
 import { ReactiveFormsModule } from "@angular/forms";
 import { CatState } from "../../state/cat";
 import * as R from "rxjs";
 
-const trimDesc = (s: string | null): string | null => {
-	if (s === null) {
-		return s;
-	}
-
-	const ss = s.trim();
-	if (ss.length === 0) {
-		return null;
-	}
-
-	return ss;
-};
-
 @Component({
 	selector: "xg-edit-dialog",
 	templateUrl: "./editdialog.html",
 	imports: [
-		UiDialog,
-		UiDialogBox,
-		UiForm,
+		UiFormDialog,
 		UiFormField,
 		ReactiveFormsModule
 	]
 })
-export class EditDialog extends UiBaseDialog<EmojiZ, void> {
+export class EditDialog extends UiBaseFormDialog<EmojiZ, void> {
 	catState = inject(CatState);
 	emojiState = inject(EmojiState);
 
@@ -47,18 +37,16 @@ export class EditDialog extends UiBaseDialog<EmojiZ, void> {
 		this.emoji.set(emoji);
 	}
 
-	connectSubmit(): void {
+	override submit(): R.Observable<void> {
 		const emoji = this.emoji();
 		if (emoji === null) {
-			return ;
+			return R.EMPTY;
 		}
 
-		const desc = trimDesc(this.fg.controls.desc.value);
+		const desc = emptyStrToUndefined(this.fg.controls.desc.value);
 		const cat = this.fg.controls.cat.value;
 
-		this.isLoad.set(true);
-
-		this.emojiState.updateEmoji(emoji, { desc, catId: cat.id })
+		return this.emojiState.updateEmoji(emoji, { desc, catId: cat.id })
 			.pipe(
 				R.concatMap(_ => {
 					return R.combineLatest([
@@ -66,8 +54,7 @@ export class EditDialog extends UiBaseDialog<EmojiZ, void> {
 						this.catState.fetchCats()
 					]);
 				}),
-				R.finalize(() => this.isLoad.set(false))
-			)
-			.subscribe(_ => this.setFinalResult());
+				R.map(_ => {})
+			);
 	}
 }

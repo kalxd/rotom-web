@@ -1,22 +1,10 @@
 import { Component, ElementRef, inject, signal, viewChild } from "@angular/core";
-import { UiBaseFormDialog, UiFormDialog, UiFormField } from "drifloon";
+import { emptyStrToUndefined, UiBaseFormDialog, UiFormDialog, UiFormField } from "drifloon";
 import { Http } from "../../../../data/http";
 import * as R from "rxjs";
 import { AddEmojiOption, EmojiState } from "../../state/emoji";
 import { CatState } from "../../state/cat";
 import { ReactiveFormsModule } from "@angular/forms";
-
-const trimStr = (s: string | undefined): string | null => {
-	if (s === undefined) {
-		return null;
-	}
-
-	const ss = s.trim();
-	if (ss.length === 0) {
-		return null;
-	}
-	return ss;
-};
 
 @Component({
 	selector: "xg-add-dialog",
@@ -69,7 +57,7 @@ export class AddDialog extends UiBaseFormDialog<void, void> {
 					const option: AddEmojiOption = {
 						fileSha: file.sha,
 						catId: this.catState.curCat().id,
-						desc: trimStr(this.fg.value.desc)
+						desc: emptyStrToUndefined(this.fg.controls.desc.value)
 					};
 					return this.emojiState.addEmoji(option).pipe(
 						R.concatMap(_ => {

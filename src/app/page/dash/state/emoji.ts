@@ -36,7 +36,7 @@ export interface SearchEmojiOption {
 export interface AddEmojiOption {
 	fileSha: string;
 	catId: number | null;
-	desc: string | null
+	desc?: string;
 }
 
 export interface UpdateEmojiOption {

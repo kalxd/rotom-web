@@ -1,5 +1,5 @@
 import { Component, ElementRef, inject, signal, viewChild } from "@angular/core";
-import { UiBaseDialog, UiDialog, UiDialogBox, UiForm, UiFormField, UiTopbar } from "drifloon";
+import { UiBaseFormDialog, UiFormDialog, UiFormField } from "drifloon";
 import { Http } from "../../../../data/http";
 import * as R from "rxjs";
 import { AddEmojiOption, EmojiState } from "../../state/emoji";
@@ -22,24 +22,20 @@ const trimStr = (s: string | undefined): string | null => {
 	selector: "xg-add-dialog",
 	templateUrl: "./adddialog.html",
 	imports: [
-		UiDialog,
-		UiTopbar,
-		UiDialogBox,
-		UiForm,
+		UiFormDialog,
 		UiFormField,
 		ReactiveFormsModule
 	]
 })
-export class AddDialog extends UiBaseDialog<void, void> {
+export class AddDialog extends UiBaseFormDialog<void, void> {
 	private http = inject(Http);
 	private catState = inject(CatState);
 	private emojiState = inject(EmojiState);
 	private inputEl = viewChild.required<ElementRef<HTMLInputElement>>("file")
 
 	file = signal<null | File>(null);
-	isLoad = signal(false);
 
-	fg = this.fb.nonNullable.group({
+	override fg = this.fb.nonNullable.group({
 		desc: [""]
 	});
 
@@ -59,16 +55,15 @@ export class AddDialog extends UiBaseDialog<void, void> {
 		this.file.set(file);
 	}
 
-	connectSubmit(): void {
+	override submit(): R.Observable<void> {
 		const file = this.file();
 
 		if (!file) {
-			return alert("请选择表情文件！");
+			alert("请选择表情文件！");
+			return R.EMPTY;
 		}
 
-		this.isLoad.set(true);
-
-		this.http.uploadFile(file)
+		return this.http.uploadFile(file)
 			.pipe(
 				R.exhaustMap(file => {
 					const option: AddEmojiOption = {
@@ -85,8 +80,7 @@ export class AddDialog extends UiBaseDialog<void, void> {
 						})
 					);
 				}),
-				R.finalize(() => this.isLoad.set(false))
-			)
-			.subscribe(_ => this.setFinalResult());
+				R.map(_ => {})
+			);
 	}
 }

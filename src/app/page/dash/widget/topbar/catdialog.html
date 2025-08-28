@@ -1,12 +1,5 @@
-<ui-dialog>
-	<ui-form [title]="formTitle" [formGroup]="fg">
-		<ui-form-field label="分类">
-			<input formControlName="name" />
-		</ui-form-field>
-	</ui-form>
-
-	@if (isLoad()) {
-	<p>正在处理中</p>
-	}
-	<ui-dialog-box (cancel)="close()" (ok)="ok$.next()" />
-</ui-dialog>
+<ui-form-dialog [title]="formTitle" [formGroup]="fg" (submit)="connectSubmit()">
+	<ui-form-field label="分类">
+		<input formControlName="name" />
+	</ui-form-field>
+</ui-form-dialog>

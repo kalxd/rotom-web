@@ -20,8 +20,15 @@ const httpErrorZ = z.object({
 
 const extractErrorMsg = (e: unknown): string => {
 	if (e instanceof HttpErrorResponse) {
-		const result = httpErrorZ.safeParse(e.error);
+		if (e.status === 413) {
+			return "图片过大！";
+		}
 
+		if (e.status === 400) {
+			return "请求数据格式不正确，请查看！";
+		}
+
+		const result = httpErrorZ.safeParse(e.error);
 		if (result.success) {
 			return result.data.msg;
 		}
@@ -92,6 +99,7 @@ export class Http {
 	private makePostFetch<T, R>(url: string, body: T | null, codec: z.ZodType<R>): Observable<R> {
 		const fixUrl = fixWithPrefix(url);
 		const opt = this.makeFetchOption()
+
 		return this.http.post(fixUrl, body, opt).pipe(
 			R.map(x => codec.parse(x)),
 			R.catchError(e => {

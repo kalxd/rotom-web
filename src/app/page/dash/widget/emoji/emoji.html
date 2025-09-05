@@ -18,7 +18,7 @@
 			}
 		</div>
 
-		<ui-pager [pager]="emojiState.pager()" (pageChange)="connectPageChange($event)" />
+		<ui-pager [pager]="emojiState.pager()" (pageOnlyChange)="connectPageChange($event)" />
 	</ng-container>
 </ui-container>
 

@@ -33,25 +33,37 @@ export class Emoji {
 	isLoad$: R.Observable<ActionResult<unknown>>;
 
 	constructor() {
-		const page$ = toObservable(this.emojiState.page)
-			.pipe(R.distinctUntilChanged());
+		const page$: R.Observable<SearchEmojiOption> = toObservable(this.emojiState.page).pipe(
+			R.map(page => ({
+				page,
+				catId: this.catState.curCat().id,
+				searchWord: this.emojiState.searchTrimWord()
+			}))
+		);
 
-		const cat$ = toObservable(this.catState.curCat)
-			.pipe(R.distinctUntilKeyChanged("id"));
+		const cat$: R.Observable<SearchEmojiOption> = toObservable(this.catState.curCat).pipe(
+			R.distinctUntilKeyChanged("id"),
+			R.tap(_ => {
+				this.emojiState.searchWord.set("");
+			}),
+			R.map(cat => ({
+				page: this.emojiState.page(),
+				catId: cat.id
+			}))
+		);
 
-		this.isLoad$ = R.combineLatest([ page$, cat$, this.emojiState.searchWord$ ])
-			.pipe(
-				R.auditTime(50),
-				ActionResult.concatMap(([page, cat, searchWord]) => {
-					const body: SearchEmojiOption = {
-						page,
-						catId: cat.id,
-						searchWord
-					};
+		const search$: R.Observable<SearchEmojiOption> = this.emojiState.searchWord$.pipe(
+			R.map(search => ({
+				page: this.emojiState.page(),
+				catId: this.catState.curCat().id,
+				searchWord: search
+			}))
+		);
 
-					return this.emojiState.fetchEmojis(body);
-				})
-			);
+		this.isLoad$ = R.merge(page$, cat$, search$).pipe(
+			R.auditTime(50),
+			ActionResult.concatMap(option => this.emojiState.fetchEmojis(option)),
+		);
 	}
 
 	connectPageChange(page: number): void {

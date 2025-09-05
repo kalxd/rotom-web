@@ -3,7 +3,7 @@ import { z } from "zod";
 import * as R from "rxjs";
 import { Http } from "../../../data/http";
 import { toObservable } from "@angular/core/rxjs-interop";
-import { PagerInput } from "drifloon";
+import { emptyStrToNull, emptyStrToUndefined, PagerInput } from "drifloon";
 import { CatState } from "./cat";
 
 const emojiZ = z.object({
@@ -29,7 +29,7 @@ export type EmojiZ = z.infer<typeof emojiZ>;
 
 export interface SearchEmojiOption {
 	catId: number | null;
-	searchWord: string | null;
+	searchWord?: string;
 	page: number;
 }
 
@@ -44,15 +44,6 @@ export interface UpdateEmojiOption {
 	desc?: string;
 }
 
-const trimSearchWork = (input: string): string | null => {
-	const s = input.trim();
-	if (s.length === 0) {
-		return null;
-	}
-
-	return s;
-};
-
 @Injectable({
 	providedIn: "root"
 })
@@ -66,17 +57,18 @@ export class EmojiState {
 	});
 
 	searchWord = signal("");
+
+	searchTrimWord = computed<undefined | string>(() => {
+		return emptyStrToUndefined(this.searchWord());
+	});
 	searchClick = new R.Subject<void>();
 
 	page = signal(1);
 	size = signal(12);
 
-	searchWord$: R.Observable<string | null> = toObservable(this.searchWord).pipe(
-		R.sample(this.searchClick.asObservable()),
+	searchWord$: R.Observable<string | undefined> = this.searchClick.asObservable().pipe(
 		R.debounceTime(200),
-		R.map(trimSearchWork),
-		R.tap(() => this.page.set(1)),
-		R.startWith<string | null>(null)
+		R.map(_ => this.searchTrimWord())
 	);
 
 	pager = computed<PagerInput>(() => ({
@@ -106,7 +98,7 @@ export class EmojiState {
 		const option: SearchEmojiOption = {
 			catId: this.catState.curCat().id,
 			page: this.page(),
-			searchWord: trimSearchWork(this.searchWord())
+			searchWord: this.searchTrimWord()
 		};
 
 		return this.fetchEmojis(option);

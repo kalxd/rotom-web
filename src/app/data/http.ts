@@ -151,7 +151,12 @@ export class Http {
 		return this.http
 			.post(url, fd, opt)
 			.pipe(
-				R.map(x => fileZ.parse(x))
+				R.map(x => fileZ.parse(x)),
+				R.catchError(e => {
+					const msg = extractErrorMsg(e);
+					alert(msg);
+					return R.EMPTY;
+				})
 			);
 	}
 }
